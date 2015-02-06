@@ -1,0 +1,7 @@
+gesdon2:
+    resource: "@Gesdon2Bundle/Resources/config/routing.yml"
+    prefix:   /
+
+app:
+    resource: @AppBundle/Controller/
+    type:     annotation

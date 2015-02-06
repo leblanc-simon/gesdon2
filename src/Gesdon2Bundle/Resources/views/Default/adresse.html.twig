@@ -1,0 +1,15 @@
+{# src/Gesdon2Bundle/Resources/views/Default/adresse.html.twig #}
+{# formulaire de création des adresses #}
+
+{% block title %}
+	<h3>Créer une adresse</h3>
+{% endblock %}
+
+{# le formulaire est affiché ici #}
+{{ form(form) }}
+
+{# bouton d'annulation. Retourne à la liste des donateurs.#}
+{#TODO déplacer action dans le contrôleur, peut être.#}
+<form action="{{ path("gesdon2_homepage") }}" method="get">
+    <input type="submit" value="Annuler">
+</form>

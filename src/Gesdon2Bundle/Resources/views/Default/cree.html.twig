@@ -1,0 +1,9 @@
+{# src/Gesdon2Bundle/Resources/views/Default/cree.html.twig #}
+
+{% block title %}
+
+	<h1>{{ nomEntite }} créé(e).</h1>
+    <form action="{{ path("gesdon2_homepage",{'nomEntite':nomEntite}) }}" method="get">
+        <input type="submit" value="OK">
+    </form>
+{% endblock %}

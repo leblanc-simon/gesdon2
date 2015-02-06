@@ -1,0 +1,39 @@
+{# src/Gesdon2Bundle/Resources/views/Default/liste.html.twig #}
+{# affiche la liste des instances de l'entité choisie #}
+{# passer la liste des instances en paramètre lors de la génération #}
+
+{# utilise l'extension twig ToArray pour convertir les objets en tableaux #}
+{# utilise l'extension twig ToArray pour convertir les objets en tableaux #}
+
+{% block body %}
+    <h1>{{ classe }}(s)</h1>
+    <form action="{{ path('gesdon2_ajouter',{'classe':classe }) }}" method="get">
+        <input type="submit" value="Créer un objet">
+    </form>
+    <table>
+        <tr>
+    {% for colonne in colonnes %}
+        <th>
+        {{ colonne }}
+        </th>
+    {% endfor %}
+        </tr>
+    {# parcourir chaque instance de l'entité, puis chaque colonne#}
+        {% for instance in instances %}
+            <tr>
+            {% for v in instance|to_array %}
+                <td>
+                {# le cas échéant, convertir la date en chaîne de caractères formatée #}
+                {% if v.timestamp is defined %}
+                    {{ v|date('Y-m-d') }}
+                {% else %}
+                    {{ v }}
+                {% endif %}
+                </td>
+            {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+
+
+{% endblock %}
