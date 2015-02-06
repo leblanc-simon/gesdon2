@@ -5,7 +5,7 @@
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  *
- * For the full copyright and license information, please view the LICENSE
+ * For the full copyright and license information, please view the symfony_license
  * file that was distributed with this source code.
  */
 
