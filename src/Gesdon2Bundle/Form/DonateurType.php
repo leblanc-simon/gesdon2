@@ -20,8 +20,6 @@ class DonateurType extends AbstractType
             ->add('nom')
             ->add('prenom')
             ->add('courriel','email')
-            // TODO placer le bouton où il devrait être
-            ->add('Créer', 'submit')
         ;
     }
     

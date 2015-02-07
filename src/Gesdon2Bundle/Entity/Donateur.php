@@ -32,7 +32,6 @@ class Donateur
      * Type lié.
      * Requis.
      * Clé étrangère.
-     * Valeurs possibles : Entreprise, Association, Particulier
      *
      * @var type
      *

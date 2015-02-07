@@ -3,6 +3,7 @@
 namespace Gesdon2Bundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Don
@@ -45,16 +46,22 @@ class Don
     private $montant;
 
     /**
-     * @var string
+     * Moyen de paiement lié.
+     * Requis.
+     * Clé étrangère.
      *
-     * @ORM\Column(name="moyen", type="string", length=63)
+     * @var moyen
+     *
+     * @Assert\NotBlank()
+     * @ORM\ManyToOne(targetEntity="Moyen")
+     * @ORM\JoinColumn(name="moyen", referencedColumnName="id", nullable=false)
      */
     private $moyen;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="moyenDesc", type="string", length=255)
+     * @ORM\Column(name="moyenDesc", type="string", length=255, nullable=true)
      */
     private $moyenDesc;
 
@@ -68,14 +75,14 @@ class Don
     /**
      * @var string
      *
-     * @ORM\Column(name="transacNum", type="string", length=255)
+     * @ORM\Column(name="transacNum", type="string", length=255, nullable=true)
      */
     private $transacNum;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="recurrDateFin", type="datetime")
+     * @ORM\Column(name="recurrDateFin", type="datetime", nullable=true)
      */
     private $recurrDateFin;
 

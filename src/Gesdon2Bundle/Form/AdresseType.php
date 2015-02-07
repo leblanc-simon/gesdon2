@@ -21,8 +21,6 @@ class AdresseType extends AbstractType
             ->add('codePostal')
             ->add('ville')
             ->add('pays')
-            // TODO placer le bouton où il devrait être
-            ->add('Créer', 'submit')
         ;
     }
     

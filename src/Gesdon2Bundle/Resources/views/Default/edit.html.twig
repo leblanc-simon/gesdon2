@@ -1,0 +1,22 @@
+{# src/Gesdon2Bundle/Resources/views/Default/edit.html.twig #}
+{# Formulaire de modification général #}
+
+{% extends '::base.html.twig' %}
+{% form_theme edit_form 'bootstrap_3_layout.html.twig' %}
+{% form_theme delete_form 'bootstrap_3_layout.html.twig' %}
+
+{% block body -%}
+    <h1>{{ nomEntite }} edit</h1>
+
+    {{ form(edit_form) }}
+
+        <ul class="record_actions">
+    <li>
+        {# TODO remplacer 'don' par une variable #}
+        <a href="{{ path('don') }}">
+            Retour à la liste
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

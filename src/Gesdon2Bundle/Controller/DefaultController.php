@@ -10,7 +10,7 @@ class DefaultController extends Controller
     public function indexAction()
     {
 
-        $routes = array("liste/Donateur", "liste/Adresse", "liste/Don");
+        $routes = array("donateur", "adresse", "don");
         return $this->render('Gesdon2Bundle:Default:index.html.twig',
             array(
                 'routes' => $routes

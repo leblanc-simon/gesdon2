@@ -17,3 +17,21 @@ gesdon2_ajouter:
 gesdon2_cree:
     path:     /cree/{nomEntite}
     defaults: {_controller: Gesdon2Bundle:Default:cree }
+
+# CRUD Donateur
+donateur:
+   resource: "@Gesdon2Bundle/Controller/"
+   type: annotation
+   prefix: /
+
+# CRUD Adresse
+adresse:
+  resource: "@Gesdon2Bundle/Controller/"
+  type: annotation
+  prefix: /
+
+# CRUD Don
+don:
+   resource: "@Gesdon2Bundle/Controller/"
+   type: annotation
+   prefix: /

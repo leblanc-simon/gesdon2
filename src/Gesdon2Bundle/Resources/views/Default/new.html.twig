@@ -1,0 +1,20 @@
+{# src/Gesdon2Bundle/Resources/views/Default/new.html.twig #}
+{# Formulaire de création général #}
+
+{% extends '::base.html.twig' %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block body -%}
+    <h1>{{ nomEntite }} creation</h1>
+
+    {{ form(form) }}
+
+        <ul class="record_actions">
+    <li>
+        {# TODO remlacer 'don' par une variable #}
+        <a href="{{ path('don') }}">
+            Retour à la liste
+        </a>
+    </li>
+</ul>
+{% endblock %}

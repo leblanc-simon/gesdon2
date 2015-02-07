@@ -3,10 +3,12 @@
 {# passer la liste des instances en paramètre lors de la génération #}
 
 {# utilise l'extension twig ToArray pour convertir les objets en tableaux #}
-{# utilise l'extension twig ToArray pour convertir les objets en tableaux #}
 
 {% block body %}
     <h1>{{ classe }}(s)</h1>
+    <form action="{{ path('gesdon2_index')}}" method="get">
+        <input type="submit" value="Index">
+    </form>
     <form action="{{ path('gesdon2_ajouter',{'classe':classe }) }}" method="get">
         <input type="submit" value="Créer un objet">
     </form>

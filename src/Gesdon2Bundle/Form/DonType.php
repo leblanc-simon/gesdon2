@@ -19,13 +19,11 @@ class DonType extends AbstractType
             ->add('montant')
             ->add('moyen')
             ->add('moyenDesc')
-            ->add('recurrence')
+            ->add('recurrence', 'checkbox', array('required' => false))
             ->add('transacNum')
             ->add('recurrDateFin')
             ->add('courriel')
             ->add('adresse')
-            // TODO placer le bouton où il devrait être
-            ->add('Créer', 'submit')
         ;
     }
     

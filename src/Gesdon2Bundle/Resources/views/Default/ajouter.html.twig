@@ -1,7 +1,7 @@
 {# src/Gesdon2Bundle/Resources/views/Default/ajouter.html.twig #}
 {# formulaire de création des objets #}
+{# TODO À SUPPRIMER et remplacer par new.html.twig #}
 
-{#{% form_theme form 'bootstrap_3_layout.html.twig' %}#}
 {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
 
 {% block body %}
@@ -11,7 +11,6 @@
     {{ form(form) }}
 
     {# bouton d'annulation. Retourne à la liste des objets.#}
-    {#TODO déplacer action dans le contrôleur, peut être?#}
     <form action="{{ path("gesdon2_homepage",{'nomEntite':objet}) }}" method="get">
         <input type="submit" value="Annuler">
     </form>
