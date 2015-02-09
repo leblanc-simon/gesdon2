@@ -2,17 +2,16 @@
 {# Formulaire de création général #}
 
 {% extends '::base.html.twig' %}
-{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
 
 {% block body -%}
-    <h1>{{ nomEntite }} creation</h1>
+    <h1>Créer un(e) {{ entity }}</h1>
 
     {{ form(form) }}
 
         <ul class="record_actions">
     <li>
-        {# TODO remlacer 'don' par une variable #}
-        <a href="{{ path('don') }}">
+        <a href="{{ path("list",{'entity':entity}) }}">
             Retour à la liste
         </a>
     </li>

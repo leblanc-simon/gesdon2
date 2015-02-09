@@ -1,37 +1,33 @@
-
-gesdon2_index:
+index:
     path:     /index
     defaults: { _controller: Gesdon2Bundle:Default:index }
 
 # page d'affichage de la liste des instances de l'entité passée en paramètre
-gesdon2_homepage:
-    path:     /liste/{nomEntite}
-    defaults: { _controller: Gesdon2Bundle:Default:liste }
+list:
+    path:     /list/{entity}
+    defaults: { _controller: Gesdon2Bundle:Default:list }
 
-# formulaire de création de donateurs
-gesdon2_ajouter:
-    path:     /ajouter/{classe}
-    defaults: { _controller: Gesdon2Bundle:Default:ajouter }
+# formulaire de création
+new:
+    path:     /new/{entity}
+    defaults: { _controller: Gesdon2Bundle:Default:new }
 
-# page de notification entité créée
-gesdon2_cree:
-    path:     /cree/{nomEntite}
-    defaults: {_controller: Gesdon2Bundle:Default:cree }
+# formulaire d'affichage
+show:
+    path:     /show/{entity}/{id}
+    defaults: { _controller: Gesdon2Bundle:Default:show }
 
-# CRUD Donateur
-donateur:
-   resource: "@Gesdon2Bundle/Controller/"
-   type: annotation
-   prefix: /
+# formulaire de modification
+edit:
+    path:     /edit/{entity}/{id}
+    defaults: { _controller: Gesdon2Bundle:Default:edit }
 
-# CRUD Adresse
-adresse:
-  resource: "@Gesdon2Bundle/Controller/"
-  type: annotation
-  prefix: /
+# formulaire de suppression
+delete:
+    path:     /delete/{entity}/{id}
+    defaults: { _controller: Gesdon2Bundle:Default:delete }
 
-# CRUD Don
-don:
-   resource: "@Gesdon2Bundle/Controller/"
-   type: annotation
-   prefix: /
+# update
+update:
+    path:     /update/{entity}/{id}
+    defaults: { _controller: Gesdon2Bundle:Default:update }

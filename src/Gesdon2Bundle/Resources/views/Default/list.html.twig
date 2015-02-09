@@ -1,0 +1,65 @@
+{# src/Gesdon2Bundle/Resources/views/Default/list.html.twig #}
+{# affiche la liste des instances de l'entité choisie #}
+{# passer la liste des instances en paramètre lors de la génération #}
+
+{# utilise l'extension twig ToArray pour convertir les objets en tableaux #}
+
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>{{ entity }}</h1>
+    <table>
+        <ul>
+            <li>
+                <a href="{{ path('new', {'entity': entity}) }}">
+                    Créer une nouvelle entrée
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('index') }}">
+                    Revenir au menu
+                </a>
+            </li>
+        </ul>
+    </table>
+
+    <table>
+        <tr>
+    {% for field in fields %}
+        <th>
+        {{ field }}
+        </th>
+    {% endfor %}
+        </tr>
+    {# pour chaque instance de l'entité... #}
+        {% for instance in instances %}
+            <tr>
+            {# pour chaque champ de l'instance... #}
+            {% for v in instance|to_array %}
+                <td>
+                {# afficher la valeur du champ #}
+                {# le cas échéant, convertir la date en chaîne de caractères formatée #}
+                {% if v.timestamp is defined %}
+                    {{ v|date('Y-m-d') }}
+                {% else %}
+                    {{ v }}
+                {% endif %}
+                </td>
+            {% endfor %}
+                {# afficher les liens vers les formulaires d'affichage et de suppression dans la dernière colonne #}
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('show', { 'entity':entity,'id': instance.id }) }}">afficher</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('edit', { 'entity':entity,'id': instance.id }) }}">modifier</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+
+{% endblock %}
