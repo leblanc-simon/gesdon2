@@ -31,7 +31,7 @@ class DefaultController extends Controller
     /**
      * Afficher la liste des instances de l'entité passée en paramètre.
      *
-     * @param String $entity
+     * @param string $entity Le nom de l'entité
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function listAction($entity)
@@ -60,7 +60,7 @@ class DefaultController extends Controller
      * Générer le formulaire de création d'instance de l'entité passée en paramètre.
      *
      * @param Request $request
-     * @param String $entity
+     * @param string $entity    Le nom de l'entité
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @Route("/new", name="new")
@@ -122,9 +122,9 @@ class DefaultController extends Controller
      * @Method("GET")
      * @Template()
      *
-     * @param $entity
-     * @param $id
-     * @return array
+     * @param string $entity Le nom de l'entité
+     * @param int $id           L'identifiant de l'instance
+     * @return array            Un tableau contenant le nom de l'entité, l'objet d'instance, et la vue de suppression
      */
     public function showAction($entity, $id)
     {
@@ -148,8 +148,8 @@ class DefaultController extends Controller
     /**
      * Afficher un formulaire pour modifier un instance.
      *
-     * @param String $entity
-     * @param Integer $id
+     * @param string $entity    Le nom de l'entité
+     * @param int $id           L'identifiant de l'instance
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
@@ -168,7 +168,7 @@ class DefaultController extends Controller
             throw $this->createNotFoundException('Unable to find '.$entity.' instance.');
         }
 
-        $editForm = $this->createEditForm($entity, $instance);
+        $editForm = $this->createEditForm($entity, $instance, $id);
         $deleteForm = $this->createDeleteForm($entity, $id);
 
         return array(
@@ -181,12 +181,13 @@ class DefaultController extends Controller
     /**
      * Créer un formulaire pour modifier une instance.
      *
-     * @param String $entity
-     * @param $instance
+     * @param string $entity    Le nom de l'entité
+     * @param object $instance  L'objet d'instance
+     * @param int $id           L'identifiant de l'isntance
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function createEditForm($entity, $instance)
+    private function createEditForm($entity, $instance, $id)
     {
         // créer l'objet type à partir du nom
         $type = 'Gesdon2Bundle\\Form\\' . $entity . "Type";
@@ -201,7 +202,7 @@ class DefaultController extends Controller
                     'update',
                     array(
                         'entity' => $entity,
-                        'id' => $instance->getId()
+                        'id' => $id
                     )
                 ),
                 'method' => 'PUT',
@@ -217,8 +218,8 @@ class DefaultController extends Controller
      * Modifier une instance.
      *
      * @param Request $request
-     * @param String $entity
-     * @param Integer $id
+     * @param string $entity    Le nom de l'entité
+     * @param int $id           L'identifiant de l'instance
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
@@ -236,8 +237,8 @@ class DefaultController extends Controller
             throw $this->createNotFoundException('Unable to find '.$entity.' instance.');
         }
 
-        $deleteForm = $this->createDeleteForm($entity, $instance);
-        $editForm = $this->createEditForm($entity, $instance);
+        $deleteForm = $this->createDeleteForm($entity, $id);
+        $editForm = $this->createEditForm($entity, $instance, $id);
         $editForm->handleRequest($request);
 
         // si le formulaire est validé...
@@ -260,8 +261,8 @@ class DefaultController extends Controller
      * Supprimer une instance.
      *
      * @param Request $request
-     * @param String $entity
-     * @param Integer $id
+     * @param string $entity    Le nom de l'entité
+     * @param int $id           l'identifiant de l'instance
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
@@ -294,10 +295,10 @@ class DefaultController extends Controller
     /**
      * Créer un formulaire pour supprimer une instance.
      *
-     * @param String $entity
-     * @param Integer $id The entity id
+     * @param string $entity    Le nom de l'entité
+     * @param int $id           L'identifiant de l'instance
      *
-     * @return \Symfony\Component\Form\Form The form
+     * @return \Symfony\Component\Form\Form Le formulaire
      */
     private function createDeleteForm($entity, $id)
     {
