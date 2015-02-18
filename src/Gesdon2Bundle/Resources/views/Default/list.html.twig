@@ -4,26 +4,54 @@
 
 {# utilise l'extension twig ToArray pour convertir les objets en tableaux #}
 
-{% extends '::base.html.twig' %}
+{# commenté car créait une erreur#}
+{#{% extends '::base.html.twig' %}#}
 
+{% form_theme list_form 'form_table_layout.html.twig' %}
+
+<html>
+<head>
+{% stylesheets '@Gesdon2Bundle/Resources/public/css/*' %}
+    <link rel="stylesheet" href="{{ asset_url }}" type="text/css">
+{% endstylesheets %}
+</head>
+<body>
 {% block body -%}
+    {# Titre #}
     <h1>{{ entity }}</h1>
-    <table>
-        <ul>
-            <li>
+    {# Actions #}
+    <table id="entities">
+        <tr>
+            <td>
                 <a href="{{ path('new', {'entity': entity}) }}">
                     Créer une nouvelle entrée
                 </a>
-            </li>
-            <li>
+            </td>
+            <td>
                 <a href="{{ path('index') }}">
                     Revenir au menu
                 </a>
-            </li>
-        </ul>
+            </td>
+        </tr>
     </table>
 
+    {# TODO ajouter des champs de filtrage #}
+{#
     <table>
+        <tr>
+        {% for child in list_form %}
+            <td>
+                {{ form_label(child) }}
+                {{ form_widget(child) }}
+            </td>
+        {% endfor %}
+        </tr>
+    </table>
+#}
+
+    {{ form(list_form) }}
+
+    <table id="entities">
         <tr>
     {% for field in fields %}
         <th>
@@ -33,7 +61,8 @@
         </tr>
     {# pour chaque instance de l'entité... #}
         {% for instance in instances %}
-            <tr>
+            {# faire une ligne sur deux de classe 'alt', pour mise en forme #}
+            <tr {% if loop.index is divisible by(2) %} class="alt"{% endif %}>
             {# pour chaque champ de l'instance... #}
             {% for v in instance|to_array %}
                 <td>
@@ -46,16 +75,9 @@
                 {% endif %}
                 </td>
             {% endfor %}
-                {# afficher les liens vers les formulaires d'affichage et de suppression dans la dernière colonne #}
+                {# afficher les liens vers le formulaire de modification dans la dernière colonne #}
                 <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('show', { 'entity':entity,'id': instance.id }) }}">afficher</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('edit', { 'entity':entity,'id': instance.id }) }}">modifier</a>
-                        </li>
-                    </ul>
+                    <a href="{{ path('edit', { 'entity':entity,'id': instance.id }) }}">modifier</a>
                 </td>
             </tr>
         {% endfor %}
@@ -63,3 +85,5 @@
 
 
 {% endblock %}
+</body>
+</html>

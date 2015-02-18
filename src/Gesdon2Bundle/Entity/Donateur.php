@@ -10,7 +10,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Donateur
  *
- * @ORM\Table(name="donateur", uniqueConstraints={@UniqueConstraint(name="courriel", columns={"courriel"})})
+ * @ORM\Table(
+ * name="donateur",
+ * uniqueConstraints={@UniqueConstraint(name="courriel", columns={"courriel"})}
+ * )
  * @ORM\Entity(repositoryClass="Gesdon2Bundle\Entity\DonateurRepository")
  * @UniqueEntity("courriel")
  */
@@ -70,7 +73,10 @@ class Donateur
      *
      * @ORM\Column(name="Courriel", type="string", length=255)
 	 * @Assert\NotBlank()
-     * @Assert\Email()
+     * @Assert\Email(
+     * message="{{ value }} n'est pas un email valide.",
+     * checkMX=false
+     * )
      */
     private $courriel;
 

@@ -5,11 +5,8 @@ namespace Gesdon2Bundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-/* Pour gestion des événements et champs conditionnels */
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 
-class DonateurType extends AbstractType
+class SearchAdresseType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -18,13 +15,14 @@ class DonateurType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            // référencer l'entité "Type"
-            ->add('type')
-            ->add('nom')
-            ->add('prenom')
-            ->add('courriel','email')
+            // TODO faire la jointure, filtrer sur l'objet, etc...
+            //->add('donateur')
+            ->add('adresse1',   'text', array('required' => false))
+            ->add('adresse2',   'text', array('required' => false))
+            ->add('codePostal', 'text', array('required' => false))
+            ->add('ville',      'text', array('required' => false))
+            ->add('pays',       'text', array('required' => false))
         ;
-        /* TODO champ prénom conditionnel*/
     }
     
     /**
@@ -33,7 +31,7 @@ class DonateurType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Gesdon2Bundle\Entity\Donateur'
+            //'data_class' => 'Gesdon2Bundle\Entity\Adresse'
         ));
     }
 
@@ -42,6 +40,6 @@ class DonateurType extends AbstractType
      */
     public function getName()
     {
-        return 'gesdon2_gesdon2bundle_donateur';
+        return '';
     }
 }

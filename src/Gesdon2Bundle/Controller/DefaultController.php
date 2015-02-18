@@ -31,29 +31,105 @@ class DefaultController extends Controller
     /**
      * Afficher la liste des instances de l'entité passée en paramètre.
      *
-     * @param string $entity Le nom de l'entité
+     * @param string $entity    Le nom de l'entité
+     * @param Request $request     TODO Tableau des champs utilisés pour le filtre
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction($entity)
+    public function listAction(Request $request, $entity)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getEntityManager();
 
         // retrouver la liste des instances de l'entité
         $bundle = "Gesdon2Bundle:";
-        $instances = $em->getRepository($bundle.$entity)->findAll();
+        // retrouver la table
+        $repository = $em->getRepository($bundle.$entity);
+        // créer un constructeur de requêtes sur la table
+        $qb = $repository->createQueryBuilder($entity);
+
+        // exécuter la requête
+        $instances = $qb->getQuery()->getResult();
 
         // retrouver les attributs de l'entité
-        $fields = $em ->getClassMetadata($bundle.$entity)->getFieldNames();
+        $fields = $em ->getClassMetadata($bundle.$entity)->getColumnNames();
+
+        $form = $this->createListForm($entity);
+
+        // si le formulaire de filtrage est soumis
+        if ($request->getMethod() == 'POST')
+        {
+            $form->handleRequest($request);
+            $filter = $form->getData();
+            //$string = $filter;
+            $andX = $qb->expr()->andX();
+            // pour chaque champ du filtre et sa valeur
+            foreach ($filter as $column => $value)
+            {
+                // si le champ n'est pas renseigné (donc chaîne vide)
+                if ($value == '')
+                {
+                    // ajouter une expression OU
+                    $andX->add($qb->expr()->orX(
+                            // le champ est NULL
+                            $qb->expr()->isNull("{$entity}.{$column}"),
+                            // ou le champ est n'importe quelle valeur
+                            $qb->expr()->like("{$entity}.{$column}", "'%'"))
+                    );
+                } else {
+                    // sinon, le champ contient la valeur
+                    $andX->add($qb->expr()->like("{$entity}.{$column}", "'{$value}'"));
+                }
+            }
+            $qb->where($andX);
+            // TODO faire la jointure avec le type, et ajouter le champ Type dans le filtre
+            // TODO faire la requête avec l'identifiant revoit l'erreur "Invalid PathExpression. Must be a StateFieldPathExpression"
+            $instances = $qb->getQuery()->getResult();
+        }
+
 
         // générer la page à retourner à partir du template twig "list"
         // en passant la liste des instances de l'entité
         return $this->render('Gesdon2Bundle:Default:list.html.twig',
             array(
+                'list_form' => $form->createView(), // créer la vue à partir du formulaire
                 'instances'=> $instances,
                 'entity'  => $entity,
                 'fields'  => $fields
             )
         );
+    }
+
+    /**
+     * TODO Créer un formulaire pour filtrer la liste des instances d'une entité.
+     *
+     * @param string $entity    Le nom de l'entité
+     *
+     * @return \Symfony\Component\Form\Form
+     */
+    private function createListForm($entity)
+    {
+        // créer l'objet type à partir du nom
+        $type = 'Gesdon2Bundle\\Form\\Search' . $entity . "Type";
+        $typeObject = new $type;
+
+        // créer le formulaire
+        $form = $this->createForm(
+            $typeObject,
+            //pas de données initiales
+            null,
+            array(
+                'action' => $this->generateUrl(
+                    'list',
+                    array(
+                        'entity' => $entity
+                    )
+                ),
+                'method' => 'POST',
+            )
+        );
+
+        $form->add('submit', 'submit', array('label' => 'Filtrer'));
+
+        return $form;
     }
 
     /**
@@ -65,7 +141,7 @@ class DefaultController extends Controller
      *
      * @Route("/new", name="new")
      * @Method("GET")
-     * @Template("Gesdon2Bundle:Default:ajouter.html.twig")
+     * @Template("Gesdon2Bundle:Default:new.html.twig")
      */
     public function newAction(Request $request, $entity)
     {
@@ -98,7 +174,7 @@ class DefaultController extends Controller
             $em->persist($entityObject);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('show', array(
+            return $this->redirect($this->generateUrl('edit', array(
                 'entity' => $entity,
                 'id' => $entityObject->getId()
             )));
@@ -112,36 +188,6 @@ class DefaultController extends Controller
                 'entity' => $entity,
                 'form'  => $form->createView()
             )
-        );
-    }
-
-    /**
-     * Trouver et afficher une instance.
-     *
-     * @Route("/{id}", name="show")
-     * @Method("GET")
-     * @Template()
-     *
-     * @param string $entity Le nom de l'entité
-     * @param int $id           L'identifiant de l'instance
-     * @return array            Un tableau contenant le nom de l'entité, l'objet d'instance, et la vue de suppression
-     */
-    public function showAction($entity, $id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $instance = $em->getRepository('Gesdon2Bundle:'.$entity)->find($id);
-
-        if (!$instance) {
-            throw $this->createNotFoundException('Unable to find ' . $entity . ' instance.');
-        }
-
-        $deleteForm = $this->createDeleteForm($entity, $id);
-
-        return array(
-            'entity'      => $entity,
-            'instance'    => $instance,
-            'delete_form' => $deleteForm->createView(),
         );
     }
 

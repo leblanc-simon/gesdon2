@@ -1,3 +1,4 @@
+# Menu des entités modifiables.
 index:
     path:     /index
     defaults: { _controller: Gesdon2Bundle:Default:index }
@@ -11,11 +12,6 @@ list:
 new:
     path:     /new/{entity}
     defaults: { _controller: Gesdon2Bundle:Default:new }
-
-# formulaire d'affichage
-show:
-    path:     /show/{entity}/{id}
-    defaults: { _controller: Gesdon2Bundle:Default:show }
 
 # formulaire de modification
 edit:

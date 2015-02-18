@@ -2,20 +2,26 @@
 {# Formulaire de modification général #}
 
 {% extends '::base.html.twig' %}
-{% form_theme edit_form 'bootstrap_3_layout.html.twig' %}
-{% form_theme delete_form 'bootstrap_3_layout.html.twig' %}
+{% form_theme edit_form 'form_table_layout.html.twig' %}
+{% form_theme delete_form 'form_table_layout.html.twig' %}
 
 {% block body -%}
     <h1>Modifier {{ entity }}</h1>
 
     {{ form(edit_form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('list',{'entity':entity}) }}">
-            Retour à la liste
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    <br>
+
+<table class="record_actions">
+    <tr>
+        <td>
+            <a href="{{ path('list',{'entity':entity}) }}">
+                Retour à la liste
+            </a>
+        </td>
+        <td>
+            {{ form(delete_form) }}
+        </td>
+    </tr>
+</table>
 {% endblock %}
