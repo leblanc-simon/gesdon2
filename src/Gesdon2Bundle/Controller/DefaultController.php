@@ -2,6 +2,7 @@
 
 namespace Gesdon2Bundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -32,7 +33,7 @@ class DefaultController extends Controller
      * Afficher la liste des instances de l'entité passée en paramètre.
      *
      * @param string $entity    Le nom de l'entité
-     * @param Request $request     TODO Tableau des champs utilisés pour le filtre
+     * @param Request $request  Tableau des champs utilisés pour le filtre
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function listAction(Request $request, $entity)
@@ -58,30 +59,42 @@ class DefaultController extends Controller
         if ($request->getMethod() == 'POST')
         {
             $form->handleRequest($request);
+
+            // retrouver les données depuis le formulaire
             $filter = $form->getData();
-            //$string = $filter;
+
+            // créer une expression AND
             $andX = $qb->expr()->andX();
             // pour chaque champ du filtre et sa valeur
             foreach ($filter as $column => $value)
             {
-                // si le champ n'est pas renseigné (donc chaîne vide)
-                if ($value == '')
+                // La fonction IDENTITY permet de filtrer sur la colonne correspondant à la clef étrangère, sans avoir à faire la jointure
+                // Sans cette fonction, Doctirne renvoit l'erreur "Invalid PathExpression. Must be a StateFieldPathExpression"
+                // TODO factoriser pour toutes les colonnes de clé étrangère (type,donateur,adresse,moyen)
+                if ($value instanceof ArrayCollection)
                 {
-                    // ajouter une expression OU
-                    $andX->add($qb->expr()->orX(
-                            // le champ est NULL
-                            $qb->expr()->isNull("{$entity}.{$column}"),
-                            // ou le champ est n'importe quelle valeur
-                            $qb->expr()->like("{$entity}.{$column}", "'%'"))
-                    );
+                    // un champ de formulaire de type 'choice' renvoit une sélection multiple sous forme de tableau
+                    // transformer le tableau en chaînes séparées par des virgules
+                    $value = $value->getValues();
+                    if (!empty($value))
+                    {
+                        $value = implode(',',($value));
+                        $andX->add("IDENTITY({$entity}.{$column}) IN ({$value})");
+                    }
                 } else {
-                    // sinon, le champ contient la valeur
-                    $andX->add($qb->expr()->like("{$entity}.{$column}", "'{$value}'"));
+                    // si le champ n'est pas vide
+                    if ($value != '')
+                    {
+                        $andX->add($qb->expr()->like("{$entity}.{$column}", "'{$value}'"));
+                    }
                 }
             }
-            $qb->where($andX);
-            // TODO faire la jointure avec le type, et ajouter le champ Type dans le filtre
-            // TODO faire la requête avec l'identifiant revoit l'erreur "Invalid PathExpression. Must be a StateFieldPathExpression"
+            // si des champs du filtre ont été renseignés, définir la clause where
+            if (!empty($andX->getParts())){
+                $qb->where($andX);
+            }
+
+            // exécuter la requête et retrouver le résultat
             $instances = $qb->getQuery()->getResult();
         }
 
@@ -99,7 +112,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * TODO Créer un formulaire pour filtrer la liste des instances d'une entité.
+     * Créer un formulaire pour filtrer la liste des instances d'une entité.
      *
      * @param string $entity    Le nom de l'entité
      *
