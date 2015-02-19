@@ -26,7 +26,7 @@ class Don
     /**
      * @var adresse
      *
-     * @ORM\ManyToOne(targetEntity="Adresse")
+     * @ORM\ManyToOne(targetEntity="Adresse",cascade={"persist"})
      * @ORM\JoinColumn(name="adresse", referencedColumnName="id")
      **/
     private $adresse;

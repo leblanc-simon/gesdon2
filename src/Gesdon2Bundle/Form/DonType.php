@@ -15,6 +15,7 @@ class DonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('adresse',new AdresseType())
             ->add('date')
             ->add('montant')
             ->add('moyen')
@@ -23,7 +24,6 @@ class DonType extends AbstractType
             ->add('transacNum')
             ->add('recurrDateFin')
             ->add('courriel')
-            ->add('adresse')
         ;
     }
     

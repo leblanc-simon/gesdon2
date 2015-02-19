@@ -34,6 +34,7 @@ class SearchDonType extends AbstractType
             // TODO trouver un moyen de filtrer par période
             ->add('recurrDateFin',  'date',     array('required' => false))
             ->add('courriel',       'text',     array('required' => false))
+            // TODO formulaire imbriqué ou popup
             ->add('adresse','entity',
                 array
                 (

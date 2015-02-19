@@ -31,7 +31,7 @@ class Adresse
      *
      * @var donateur
      *
-     * @ORM\ManyToOne(targetEntity="Donateur")
+     * @ORM\ManyToOne(targetEntity="Donateur", cascade={"persist"})
      * @ORM\JoinColumn(name="donateur", referencedColumnName="id", nullable=true)
      **/
     private $donateur;
