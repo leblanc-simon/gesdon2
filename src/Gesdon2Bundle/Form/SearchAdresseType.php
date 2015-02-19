@@ -15,8 +15,12 @@ class SearchAdresseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            // TODO faire la jointure, filtrer sur l'objet, etc...
-            //->add('donateur')
+            ->add('donateur','entity',array(
+                'class' => 'Gesdon2Bundle:Donateur',
+                'property' => 'nom',
+                'required' => false,
+                'multiple' => true,
+            ))
             ->add('adresse1',   'text', array('required' => false))
             ->add('adresse2',   'text', array('required' => false))
             ->add('codePostal', 'text', array('required' => false))

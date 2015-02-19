@@ -16,9 +16,8 @@ class SearchDonType extends AbstractType
     {
         $builder
             // TODO trouver un moyen de filtrer par période
-            //->add('date',           'date',     array('required' => false))
+            ->add('date', 'date', array('required' => false))
             ->add('montant',        'number',   array('required' => false))
-            // TODO entité Moyen
             ->add('moyen','entity',
                 array
                 (
@@ -26,19 +25,23 @@ class SearchDonType extends AbstractType
                     'property' => 'nom',
                     'required' => false,
                     'multiple' => true,
-                    // passer 'expanded à 'true' pour avoir de checkbox
-                    // cependant : impossible de lui faire prendre les valeurs par défaut
-                    //'expanded' => true,
+                    'expanded' => true,
                 )
             )
             ->add('moyenDesc',      'text',     array('required' => false))
             ->add('recurrence',     'checkbox', array('required' => false))
             ->add('transacNum',     'text',     array('required' => false))
             // TODO trouver un moyen de filtrer par période
-            //->add('recurrDateFin',  'date',     array('required' => false))
+            ->add('recurrDateFin',  'date',     array('required' => false))
             ->add('courriel',       'text',     array('required' => false))
-            // TODO entité adresse
-            //->add('adresse')
+            ->add('adresse','entity',
+                array
+                (
+                    'class' => 'Gesdon2Bundle:Adresse',
+                    'required' => false,
+                    'multiple' => true,
+                )
+            )
         ;
     }
     

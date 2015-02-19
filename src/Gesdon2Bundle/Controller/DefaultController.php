@@ -75,11 +75,25 @@ class DefaultController extends Controller
                 {
                     // un champ de formulaire de type 'choice' renvoit une sélection multiple sous forme de tableau
                     // transformer le tableau en chaînes séparées par des virgules
-                    $value = $value->getValues();
-                    if (!empty($value))
+                    $elements = $value->toArray();
+                    // si le tableau n'est pas vide...
+                    if (!empty($elements))
                     {
-                        $value = implode(',',($value));
-                        $andX->add("IDENTITY({$entity}.{$column}) IN ({$value})");
+                        /** @var string $ids Chaîne des Id*/
+                        $ids = '';
+                        $i = 0;
+                        $len = count($elements);
+                        // pour chaque objet du tableau
+                        foreach ($elements as $object) {
+                            // ajouter l'Id à la chaîne
+                            $ids = $ids . $object->getId();
+                            if ($i != $len - 1){
+                                $ids = $ids . ',';
+                            }
+                            $i++;
+                        }
+                        // passer la chaîne des Id dans la clause
+                        $andX->add("IDENTITY({$entity}.{$column}) IN ({$ids})");
                     }
                 } else {
                     // si le champ n'est pas vide
