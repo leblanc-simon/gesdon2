@@ -1,4 +1,4 @@
-{# src/Gesdon2Bundle/Resources/views/Default/list.html.twig #}
+{# src/Gesdon2Bundle/Resources/views/Donateur/list.html.twig #}
 {# affiche la liste des instances de l'entité choisie #}
 {# passer la liste des instances en paramètre lors de la génération #}
 
@@ -23,7 +23,7 @@
     <table id="entities">
         <tr>
             <td>
-                <a href="{{ path('new', {'entity': entity}) }}">
+                <a href="{{ path('donateur_new') }}">
                     Créer une nouvelle entrée
                 </a>
             </td>
@@ -35,29 +35,25 @@
         </tr>
     </table>
 
-    {# TODO ajouter des champs de filtrage #}
-{#
-    <table>
-        <tr>
-        {% for child in list_form %}
-            <td>
-                {{ form_label(child) }}
-                {{ form_widget(child) }}
-            </td>
-        {% endfor %}
-        </tr>
-    </table>
-#}
-
     {{ form(list_form) }}
 
     <table id="entities">
         <tr>
-    {% for field in fields %}
-        <th>
-        {{ field }}
-        </th>
-    {% endfor %}
+            <th>
+                ID
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Nom
+            </th>
+            <th>
+                Prénom
+            </th>
+            <th>
+                Courriel
+            </th>
         </tr>
     {# pour chaque instance de l'entité... #}
         {% for instance in instances %}
@@ -77,7 +73,7 @@
             {% endfor %}
                 {# afficher les liens vers le formulaire de modification dans la dernière colonne #}
                 <td>
-                    <a href="{{ path('edit', { 'entity':entity,'id': instance.id }) }}">modifier</a>
+                    <a href="{{ path('donateur_edit', { 'id': instance.id }) }}">modifier</a>
                 </td>
             </tr>
         {% endfor %}

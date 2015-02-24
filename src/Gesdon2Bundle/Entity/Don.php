@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Don
  *
  * @ORM\Table(name="don")
- * @ORM\Entity(repositoryClass="Gesdon2Bundle\Entity\DonRepository")
+ * @ORM\Entity()
  */
 class Don
 {
@@ -22,12 +22,14 @@ class Don
      */
     private $id;
 
-    // clé étrangère : identifiant de l'adresse où est domicilié le don
     /**
+     * Adresse liée.
+     * Clé étrangère.
+     *
      * @var adresse
      *
      * @ORM\ManyToOne(targetEntity="Adresse",cascade={"persist"})
-     * @ORM\JoinColumn(name="adresse", referencedColumnName="id")
+     * @ORM\JoinColumn(name="adresse", referencedColumnName="id", nullable=true)
      **/
     private $adresse;
 
@@ -86,9 +88,9 @@ class Don
      */
     private $recurrDateFin;
 
-    // courriel avec lequel a été effectué le don.
-    // enregistré pour historique
     /**
+     * Adresse courriel du donateur à la date du don.
+     *
      * @var string
      *
      * @ORM\Column(name="courriel", type="string", length=255)

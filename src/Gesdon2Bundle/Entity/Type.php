@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Type de donateur.
  *
  * @ORM\Table(name="type")
- * @ORM\Entity(repositoryClass="Gesdon2Bundle\Entity\TypeRepository")
+ * @ORM\Entity()
  */
 class Type
 {

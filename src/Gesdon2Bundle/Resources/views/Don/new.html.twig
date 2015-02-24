@@ -1,0 +1,50 @@
+{# src/Gesdon2Bundle/Resources/views/Don/new.html.twig #}
+{# Formulaire de création général #}
+
+{#{% extends '::base.html.twig' %}#}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+<head>
+    <title>Créer un don</title>
+</head>
+<body>
+{% block body -%}
+    <h1>Créer un don</h1>
+
+    <div class="col-lg-12">
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        <fieldset>
+            <legend>Don</legend>
+            {{ form_row(form.date) }}
+            {{ form_row(form.montant) }}
+            {{ form_row(form.moyen) }}
+            {{ form_row(form.moyenDesc) }}
+            {{ form_row(form.recurrence) }}
+            {{ form_row(form.recurrDateFin) }}
+            {{ form_row(form.transacNum) }}
+            {{ form_row(form.courriel) }}
+        </fieldset>
+        <fieldset>
+            <legend>Donateur</legend>
+            {{ form_row(form.adresse.donateur) }}
+        </fieldset>
+        <fieldset>
+            <legend>Adresse</legend>
+            {{ form_row(form.adresse.adresse1) }}
+            {{ form_row(form.adresse.adresse2) }}
+            {{ form_row(form.adresse.codePostal) }}
+            {{ form_row(form.adresse.ville) }}
+            {{ form_row(form.adresse.pays) }}
+        </fieldset>
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+    </div>
+
+<div class="record_actions">
+    <a href="{{ path("don_list") }}">
+        Retour à la liste
+    </a>
+</div>
+{% endblock %}
+</body>

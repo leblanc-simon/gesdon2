@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Moyen de paiement.
  *
  * @ORM\Table(name="moyen")
- * @ORM\Entity(repositoryClass="Gesdon2Bundle\Entity\MoyenRepository")
+ * @ORM\Entity()
  */
 class Moyen
 {

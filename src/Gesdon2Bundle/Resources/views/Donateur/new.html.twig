@@ -1,0 +1,22 @@
+{# src/Gesdon2Bundle/Resources/views/Donateur/new.html.twig #}
+{# Formulaire de création général #}
+
+{#{% extends '::base.html.twig' %}#}
+{% form_theme form 'form_table_layout.html.twig' %}
+
+<head>
+    <title>Créer un donateur</title>
+</head>
+<body>
+{% block body -%}
+    <h1>Créer un donateur</h1>
+
+    {{ form(form) }}
+
+<div class="record_actions">
+    <a href="{{ path("donateur_list") }}">
+        Retour à la liste
+    </a>
+</div>
+{% endblock %}
+</body>

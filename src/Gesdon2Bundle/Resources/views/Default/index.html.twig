@@ -2,6 +2,6 @@
 {% block body %}
     <h1>Menu</h1>
     {% for entity in entities %}
-        <a href="list/{{ entity }}">{{ entity }}</a><br>
+        <a href={{ entity }}>{{ entity }}</a><br>
     {% endfor %}
 {% endblock %}

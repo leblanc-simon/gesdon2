@@ -1,0 +1,103 @@
+{# src/Gesdon2Bundle/Resources/views/Don/list.html.twig #}
+{# affiche la liste des instances de l'entité choisie #}
+{# passer la liste des instances en paramètre lors de la génération #}
+
+{# utilise l'extension twig ToArray pour convertir les objets en tableaux #}
+
+{# commenté car créait une erreur#}
+{#{% extends '::base.html.twig' %}#}
+
+{% form_theme list_form 'form_table_layout.html.twig' %}
+
+<html>
+<head>
+{% stylesheets '@Gesdon2Bundle/Resources/public/css/*' %}
+    <link rel="stylesheet" href="{{ asset_url }}" type="text/css">
+{% endstylesheets %}
+</head>
+<body>
+{% block body -%}
+    {# Titre #}
+    <h1>{{ entity }}</h1>
+    {# Actions #}
+    <table id="entities">
+        <tr>
+            <td>
+                <a href="{{ path('don_new') }}">
+                    Créer une nouvelle entrée
+                </a>
+            </td>
+            <td>
+                <a href="{{ path('index') }}">
+                    Revenir au menu
+                </a>
+            </td>
+        </tr>
+    </table>
+
+    {{ form(list_form) }}
+
+    <table id="entities">
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Donateur
+            </th>
+            <th>
+                Adresse
+            </th>
+            <th>
+                Date
+            </th>
+            <th>
+                Montant
+            </th>
+            <th>
+                Moyen
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Récurrence
+            </th>
+            <th>
+                N° Transaction
+            </th>
+            <th>
+                Fin Récurrence
+            </th>
+            <th>
+                Courriel
+            </th>
+        </tr>
+    {# pour chaque instance de l'entité... #}
+        {% for instance in instances %}
+            {# faire une ligne sur deux de classe 'alt', pour mise en forme #}
+            <tr {% if loop.index is divisible by(2) %} class="alt"{% endif %}>
+            {# pour chaque champ de l'instance... #}
+            {% for v in instance|to_array %}
+                <td>
+                {# afficher la valeur du champ #}
+                {# le cas échéant, convertir la date en chaîne de caractères formatée #}
+                {% if v.timestamp is defined %}
+                    {{ v|date('Y-m-d') }}
+                {% else %}
+                    {{ v }}
+                {% endif %}
+                </td>
+            {% endfor %}
+                {# afficher les liens vers le formulaire de modification dans la dernière colonne #}
+                <td>
+                    <a href="{{ path('don_edit', { 'id': instance.id }) }}">modifier</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+
+{% endblock %}
+</body>
+</html>

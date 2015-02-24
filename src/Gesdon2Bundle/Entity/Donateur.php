@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * name="donateur",
  * uniqueConstraints={@UniqueConstraint(name="courriel", columns={"courriel"})}
  * )
- * @ORM\Entity(repositoryClass="Gesdon2Bundle\Entity\DonateurRepository")
+ * @ORM\Entity()
  * @UniqueEntity("courriel")
  */
 class Donateur

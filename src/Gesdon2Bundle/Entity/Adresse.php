@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Adresse
  *
  * @ORM\Table(name="adresse")
- * @ORM\Entity(repositoryClass="Gesdon2Bundle\Entity\AdresseRepository")
+ * @ORM\Entity()
  */
 class Adresse
 {
@@ -26,7 +26,7 @@ class Adresse
     private $id;
 
     /**
-     * Identifiant du donateur lié.
+     * Donateur lié.
      * Clé étrangère.
      *
      * @var donateur

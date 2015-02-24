@@ -15,7 +15,6 @@ class AdresseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            //->add('donateur')
             ->add('donateur', new DonateurType())
             ->add('adresse1')
             ->add('adresse2')

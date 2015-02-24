@@ -3,27 +3,79 @@ index:
     path:     /index
     defaults: { _controller: Gesdon2Bundle:Default:index }
 
+
 # page d'affichage de la liste des instances de l'entité passée en paramètre
-list:
-    path:     /list/{entity}
-    defaults: { _controller: Gesdon2Bundle:Default:list }
+donateur_list:
+    path:     /Donateur
+    defaults: { _controller: Gesdon2Bundle:Donateur:list }
 
 # formulaire de création
-new:
-    path:     /new/{entity}
-    defaults: { _controller: Gesdon2Bundle:Default:new }
+donateur_new:
+    path:     /Donateur/new
+    defaults: { _controller: Gesdon2Bundle:Donateur:new }
 
 # formulaire de modification
-edit:
-    path:     /edit/{entity}/{id}
-    defaults: { _controller: Gesdon2Bundle:Default:edit }
+donateur_edit:
+    path:     /Donateur/edit/{id}
+    defaults: { _controller: Gesdon2Bundle:Donateur:edit }
 
 # formulaire de suppression
-delete:
-    path:     /delete/{entity}/{id}
-    defaults: { _controller: Gesdon2Bundle:Default:delete }
+donateur_delete:
+    path:     /Donateur/delete/{id}
+    defaults: { _controller: Gesdon2Bundle:Donateur:delete }
 
 # update
-update:
-    path:     /update/{entity}/{id}
-    defaults: { _controller: Gesdon2Bundle:Default:update }
+donateur_update:
+    path:     /Donateur/update/{id}
+    defaults: { _controller: Gesdon2Bundle:Donateur:update }
+
+
+# page d'affichage de la liste des instances de l'entité passée en paramètre
+adresse_list:
+    path:     /Adresse
+    defaults: { _controller: Gesdon2Bundle:Adresse:list }
+
+# formulaire de création
+adresse_new:
+    path:     /Adresse/new
+    defaults: { _controller: Gesdon2Bundle:Adresse:new }
+
+# formulaire de modification
+adresse_edit:
+    path:     /Adresse/edit/{id}
+    defaults: { _controller: Gesdon2Bundle:Adresse:edit }
+
+# formulaire de suppression
+adresse_delete:
+    path:     /Adresse/delete/{id}
+    defaults: { _controller: Gesdon2Bundle:Adresse:delete }
+
+# update
+adresse_update:
+    path:     /Adresse/update/{id}
+    defaults: { _controller: Gesdon2Bundle:Adresse:update }
+
+# page d'affichage de la liste des instances de l'entité passée en paramètre
+don_list:
+    path:     /Don
+    defaults: { _controller: Gesdon2Bundle:Don:list }
+
+# formulaire de création
+don_new:
+    path:     /Don/new
+    defaults: { _controller: Gesdon2Bundle:Don:new }
+
+# formulaire de modification
+don_edit:
+    path:     /Don/edit/{id}
+    defaults: { _controller: Gesdon2Bundle:Don:edit }
+
+# formulaire de suppression
+don_delete:
+    path:     /Don/delete/{id}
+    defaults: { _controller: Gesdon2Bundle:Don:delete }
+
+# update
+don_update:
+    path:     /Don/update/{id}
+    defaults: { _controller: Gesdon2Bundle:Don:update }

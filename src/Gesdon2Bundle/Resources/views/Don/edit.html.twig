@@ -1,0 +1,31 @@
+{# src/Gesdon2Bundle/Resources/views/Don/edit.html.twig #}
+{# Formulaire de modification général #}
+
+{% form_theme edit_form 'form_table_layout.html.twig' %}
+{% form_theme delete_form 'form_table_layout.html.twig' %}
+
+<head>
+    <title>Modifier un don</title>
+</head>
+
+
+{% block body -%}
+    <h1>Modifier don</h1>
+
+    {{ form(edit_form) }}
+
+    <br>
+
+<table class="record_actions">
+    <tr>
+        <td>
+            <a href="{{ path('don_list') }}">
+                Retour à la liste
+            </a>
+        </td>
+        <td>
+            {{ form(delete_form) }}
+        </td>
+    </tr>
+</table>
+{% endblock %}

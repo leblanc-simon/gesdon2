@@ -17,7 +17,7 @@ class SearchDonType extends AbstractType
         $builder
             // TODO trouver un moyen de filtrer par période
             ->add('date', 'date', array('required' => false))
-            ->add('montant',        'number',   array('required' => false))
+            ->add('montant', 'number', array('required' => false))
             ->add('moyen','entity',
                 array
                 (
@@ -25,7 +25,6 @@ class SearchDonType extends AbstractType
                     'property' => 'nom',
                     'required' => false,
                     'multiple' => true,
-                    'expanded' => true,
                 )
             )
             ->add('moyenDesc',      'text',     array('required' => false))
@@ -35,6 +34,14 @@ class SearchDonType extends AbstractType
             ->add('recurrDateFin',  'date',     array('required' => false))
             ->add('courriel',       'text',     array('required' => false))
             // TODO formulaire imbriqué ou popup
+            ->add(
+                'donateur','entity',array(
+                    'class' => 'Gesdon2Bundle:Donateur',
+                    'property' => 'nom',
+                    'required' => false,
+                    'multiple' => true,
+                )
+            )
             ->add('adresse','entity',
                 array
                 (

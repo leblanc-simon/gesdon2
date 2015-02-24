@@ -1,0 +1,20 @@
+{# src/Gesdon2Bundle/Resources/views/Adresse/new.html.twig #}
+
+{% form_theme form 'form_table_layout.html.twig' %}
+
+<head>
+    <title>Créer une adresse</title>
+</head>
+<body>
+{% block body -%}
+    <h1>Créer une adresse</h1>
+
+    {{ form(form) }}
+
+<div class="record_actions">
+    <a href="{{ path("adresse_list") }}">
+        Retour à la liste
+    </a>
+</div>
+{% endblock %}
+</body>
