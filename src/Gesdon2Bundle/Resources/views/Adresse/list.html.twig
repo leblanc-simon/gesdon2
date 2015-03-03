@@ -1,11 +1,6 @@
 {# src/Gesdon2Bundle/Resources/views/Adresse/list.html.twig #}
 {# passer la liste des instances en paramètre lors de la génération #}
 
-{# utilise l'extension twig ToArray pour convertir les objets en tableaux #}
-
-{# commenté car créait une erreur#}
-{#{% extends '::base.html.twig' %}#}
-
 {% form_theme list_form 'form_table_layout.html.twig' %}
 
 <html>
@@ -16,69 +11,46 @@
 </head>
 <body>
 {% block body -%}
-    {# Titre #}
-    <h1>{{ entity }}</h1>
-    {# Actions #}
-    <table id="entities">
-        <tr>
-            <td>
-                <a href="{{ path('adresse_new') }}">
-                    Créer une nouvelle entrée
-                </a>
-            </td>
-            <td>
-                <a href="{{ path('index') }}">
-                    Revenir au menu
-                </a>
-            </td>
-        </tr>
-    </table>
 
-    {{ form(list_form) }}
+    {{ form_start(list_form) }}
+    {{ form_errors(list_form) }}
+
+    {{ form_row(list_form.donateur) }}
+    {{ form_row(list_form.adresse1) }}
+    {{ form_row(list_form.adresse2) }}
+    {{ form_row(list_form.codePostal) }}
+    {{ form_row(list_form.ville) }}
+    {{ form_row(list_form.pays) }}
+
+    {{ form_rest(list_form) }}
+    {{ form_end(list_form) }}
 
     <table id="entities">
         <tr>
-            <th>
-                ID
-            </th>
-            <th>
-                Donateur
-            </th>
-            <th>
-                Adresse 1
-            </th>
-            <th>
-                Adresse 2
-            </th>
-            <th>
-                Code Postal
-            </th>
-            <th>
-                Ville
-            </th>
-            <th>
-                Pays
-            </th>
+            <th>ID</th>
+            <th>Donateur</th>
+            <th>Adresse 1</th>
+            <th>Adresse 2</th>
+            <th>Code Postal</th>
+            <th>Ville</th>
+            <th>Pays</th>
         </tr>
     {# pour chaque instance de l'entité... #}
         {% for instance in instances %}
             {# faire une ligne sur deux de classe 'alt', pour mise en forme #}
-            <tr {% if loop.index is divisible by(2) %} class="alt"{% endif %}>
-            {# pour chaque champ de l'instance... #}
-            {% for v in instance|to_array %}
-                <td>
-                {# afficher la valeur du champ #}
-                {# le cas échéant, convertir la date en chaîne de caractères formatée #}
-                {% if v.timestamp is defined %}
-                    {{ v|date('Y-m-d') }}
-                {% else %}
-                    {{ v }}
-                {% endif %}
-                </td>
-            {% endfor %}
+            {# définir l'id à "adresse" pour identifier dans jQuery #}
+            <tr {% if loop.index is divisible by(2) %} class="alt"{% endif %} id="adresse">
+                <td class="id">{{ instance.id }}</td>
+                <td class="donateur">{{ instance.donateur }}</td>
+                <td class="adresse1">{{ instance.adresse1 }}</td>
+                <td class="adresse2">{{ instance.adresse2 }}</td>
+                <td class="codePostal">{{ instance.codePostal }}</td>
+                <td class="ville">{{ instance.ville }}</td>
+                <td class="pays">{{ instance.pays }}</td>
+
                 {# afficher les liens vers le formulaire de modification dans la dernière colonne #}
                 <td>
-                    <a href="{{ path('adresse_edit', { 'id': instance.id }) }}">modifier</a>
+                    <a href="{{ path('adresse_edit', { 'id': instance.id }) }}"></a>
                 </td>
             </tr>
         {% endfor %}

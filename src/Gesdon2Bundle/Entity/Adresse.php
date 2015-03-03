@@ -38,17 +38,15 @@ class Adresse
 
     /**
      * Adresse, première ligne.
-     * Requis.
      *
      * @var string
      * @Assert\NotBlank()
-     * @ORM\Column(name="adresse1", type="string", length=255, nullable=false)
+     * @ORM\Column(name="adresse1", type="string", length=255, nullable=true)
      */
     private $adresse1;
 
     /**
      * Adresse, deuxième ligne.
-     * Non requis.
      *
      * @var string
      *
@@ -58,31 +56,28 @@ class Adresse
 
     /**
      * Code Postal.
-     * Requis.
      *
      * @var string
      * @Assert\NotBlank()
-     * @ORM\Column(name="codePostal", type="string", length=5)
+     * @ORM\Column(name="codePostal", type="string", length=5, nullable=true)
      */
     private $codePostal;
 
     /**
      * Ville.
-     * Requis.
      *
      * @var string
      * @Assert\NotBlank()
-     * @ORM\Column(name="ville", type="string", length=255)
+     * @ORM\Column(name="ville", type="string", length=255, nullable=true)
      */
     private $ville;
 
     /**
      * Pays.
-     * Requis.
      *
      * @var string
      * @Assert\NotBlank()
-     * @ORM\Column(name="pays", type="string", length=255)
+     * @ORM\Column(name="pays", type="string", length=255, nullable=true)
      */
     private $pays;
 

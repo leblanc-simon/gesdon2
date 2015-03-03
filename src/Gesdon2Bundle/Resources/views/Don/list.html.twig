@@ -1,11 +1,7 @@
 {# src/Gesdon2Bundle/Resources/views/Don/list.html.twig #}
-{# affiche la liste des instances de l'entité choisie #}
 {# passer la liste des instances en paramètre lors de la génération #}
 
 {# utilise l'extension twig ToArray pour convertir les objets en tableaux #}
-
-{# commenté car créait une erreur#}
-{#{% extends '::base.html.twig' %}#}
 
 {% form_theme list_form 'form_table_layout.html.twig' %}
 
@@ -17,61 +13,22 @@
 </head>
 <body>
 {% block body -%}
-    {# Titre #}
-    <h1>{{ entity }}</h1>
-    {# Actions #}
-    <table id="entities">
-        <tr>
-            <td>
-                <a href="{{ path('don_new') }}">
-                    Créer une nouvelle entrée
-                </a>
-            </td>
-            <td>
-                <a href="{{ path('index') }}">
-                    Revenir au menu
-                </a>
-            </td>
-        </tr>
-    </table>
 
     {{ form(list_form) }}
 
     <table id="entities">
         <tr>
-            <th>
-                ID
-            </th>
-            <th>
-                Donateur
-            </th>
-            <th>
-                Adresse
-            </th>
-            <th>
-                Date
-            </th>
-            <th>
-                Montant
-            </th>
-            <th>
-                Moyen
-            </th>
-            <th>
-                Description
-            </th>
-            <th>
-                Récurrence
-            </th>
-            <th>
-                N° Transaction
-            </th>
-            <th>
-                Fin Récurrence
-            </th>
-            <th>
-                Courriel
-            </th>
+            <th>ID</th>
+            <th>Donateur</th>
+            <th>Adresse</th>
+            <th>Date</th>
+            <th>Montant</th>
+            <th>Moyen</th>
+            <th>Description</th>
+            <th>Récurrence</th>
+            <th>N° Transaction</th>
+            <th>Fin Récurrence</th>
+            <th>Courriel</th>
         </tr>
     {# pour chaque instance de l'entité... #}
         {% for instance in instances %}

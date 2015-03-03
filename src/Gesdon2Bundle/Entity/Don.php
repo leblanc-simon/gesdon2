@@ -86,7 +86,7 @@ class Don
      *
      * @ORM\Column(name="recurrDateFin", type="datetime", nullable=true)
      */
-    private $recurrDateFin;
+    private $dateFinRecurrence;
 
     /**
      * Adresse courriel du donateur à la date du don.
@@ -275,26 +275,26 @@ class Don
     }
 
     /**
-     * Set recurrDateFin
+     * Set dateFinRecurrence
      *
-     * @param \DateTime $recurrDateFin
+     * @param \DateTime $dateFinRecurrence
      * @return Don
      */
-    public function setRecurrDateFin($recurrDateFin)
+    public function setdateFinRecurrence($dateFinRecurrence)
     {
-        $this->recurrDateFin = $recurrDateFin;
+        $this->dateFinRecurrence = $dateFinRecurrence;
 
         return $this;
     }
 
     /**
-     * Get recurrDateFin
+     * Get dateFinRecurrence
      *
      * @return \DateTime 
      */
-    public function getRecurrDateFin()
+    public function getdateFinRecurrence()
     {
-        return $this->recurrDateFin;
+        return $this->dateFinRecurrence;
     }
 
     /**

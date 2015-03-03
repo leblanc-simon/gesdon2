@@ -16,13 +16,23 @@ class DonType extends AbstractType
     {
         $builder
             ->add('adresse',new AdresseType())
-            ->add('date')
+            ->add('date', 'date', array(
+                'widget'=> 'single_text',
+                'input' => 'datetime',
+                'format'=> 'dd/MM/yyyy',
+                'attr'  => array('class' => 'date'),
+            ))
             ->add('montant')
             ->add('moyen')
             ->add('moyenDesc')
             ->add('recurrence', 'checkbox', array('required' => false))
             ->add('transacNum')
-            ->add('recurrDateFin')
+            ->add('dateFinRecurrence', 'date', array(
+                'widget'=> 'single_text',
+                'input' => 'datetime',
+                'format'=> 'dd/MM/yyyy',
+                'attr'  => array('class' => 'date'),
+            ))
             ->add('courriel')
         ;
     }

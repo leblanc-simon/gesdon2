@@ -31,7 +31,7 @@ class SearchDonType extends AbstractType
             ->add('recurrence',     'checkbox', array('required' => false))
             ->add('transacNum',     'text',     array('required' => false))
             // TODO trouver un moyen de filtrer par période
-            ->add('recurrDateFin',  'date',     array('required' => false))
+            ->add('dateFinRecurrence',  'date',     array('required' => false))
             ->add('courriel',       'text',     array('required' => false))
             // TODO formulaire imbriqué ou popup
             ->add(

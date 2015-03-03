@@ -34,7 +34,7 @@ class AdresseController extends Controller
         // TODO ne renvoie pas les clés étrangères. Trouver autre méthode.
         $fields = $em ->getClassMetadata('Gesdon2Bundle:Adresse')->getColumnNames();
 
-        $form = $this->createListForm('Adresse');
+        $form = $this->createFilterForm('Adresse');
 
         // si le formulaire de filtrage est soumis
         if ($request->getMethod() == 'POST')
@@ -79,7 +79,7 @@ class AdresseController extends Controller
                     // si le champ n'est pas vide
                     if ($value != '')
                     {
-                        $andX->add($qb->expr()->like("{'Adresse'}.{$column}", "'{$value}'"));
+                        $andX->add($qb->expr()->like("Adresse.{$column}", "'{$value}'"));
                     }
                 }
             }
@@ -112,7 +112,7 @@ class AdresseController extends Controller
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function createListForm($entity)
+    private function createFilterForm($entity)
     {
         // créer l'objet type à partir du nom
         $type = 'Gesdon2Bundle\\Form\\Search' . $entity . "Type";

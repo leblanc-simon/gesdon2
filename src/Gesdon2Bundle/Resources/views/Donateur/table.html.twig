@@ -12,17 +12,6 @@
 <body>
 {% block body -%}
 
-    {{ form_start(list_form) }}
-    {{ form_errors(list_form) }}
-
-    {{ form_row(list_form.type) }}
-    {{ form_row(list_form.nom) }}
-    {{ form_row(list_form.prenom) }}
-    {{ form_row(list_form.courriel) }}
-
-    {{ form_rest(list_form) }}
-    {{ form_end(list_form) }}
-
     <table id="entities">
         <tr>
             <th>ID</th>

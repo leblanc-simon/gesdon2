@@ -30,7 +30,7 @@ class DonateurController extends Controller
         // exécuter la requête
         $instances = $qb->getQuery()->getResult();
 
-        $form = $this->createListForm('Donateur');
+        $form = $this->createFilterForm('Donateur');
 
         // si le formulaire de filtrage est soumis
         if ($request->getMethod() == 'POST')
@@ -83,13 +83,9 @@ class DonateurController extends Controller
             if (!empty($andX->getParts())){
                 $qb->where($andX);
             }
-
             // exécuter la requête et retrouver le résultat
             $instances = $qb->getQuery()->getResult();
-
         }
-
-
         // générer la page à retourner à partir du template twig "list"
         // en passant la liste des instances de l'entité
         return $this->render('Gesdon2Bundle:Donateur:list.html.twig',
@@ -108,7 +104,7 @@ class DonateurController extends Controller
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function createListForm($entity)
+    private function createFilterForm($entity)
     {
         // créer l'objet type à partir du nom
         $type = 'Gesdon2Bundle\\Form\\Search' . $entity . "Type";
@@ -120,16 +116,86 @@ class DonateurController extends Controller
             //pas de données initiales
             null,
             array(
-                'action' => $this->generateUrl(
-                    'donateur_list'
-                ),
+                'action' => $this->generateUrl('donateur_list'),
                 'method' => 'POST',
             )
         );
 
-        $form->add('submit', 'submit', array('label' => 'Filtrer'));
+        $form->add('filtrer', 'submit', array('label' => 'Filtrer'));
 
         return $form;
+    }
+
+    /**
+     * Créer le tableau HTML des donateurs
+     *
+     * @param $form_data
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function tableAction($form_data){
+        $em = $this->getDoctrine()->getManager();
+
+        // retrouver la table
+        $repository = $em->getRepository('Gesdon2Bundle:Donateur');
+        // créer un constructeur de requêtes sur la table
+        $qb = $repository->createQueryBuilder('Donateur');
+
+            // retrouver les données du formulaire
+            $filter = $form_data;
+
+            // créer une expression AND
+            $andX = $qb->expr()->andX();
+            // pour chaque champ du filtre et sa valeur
+            foreach ($filter as $column => $value)
+            {
+                // La fonction IDENTITY permet de filtrer sur la colonne correspondant à la clef étrangère, sans avoir à faire la jointure
+                // Sans cette fonction, Doctirne renvoit l'erreur "Invalid PathExpression. Must be a StateFieldPathExpression"
+                if ($value instanceof ArrayCollection)
+                {
+                    // un champ de formulaire de type 'choice' renvoit une sélection multiple sous forme de tableau
+                    // transformer le tableau en chaînes séparées par des virgules
+                    $elements = $value->toArray();
+                    // si le tableau n'est pas vide...
+                    if (!empty($elements))
+                    {
+                        /** @var string $ids Chaîne des Id*/
+                        $ids = '';
+                        $i = 0;
+                        $len = count($elements);
+                        // pour chaque objet du tableau
+                        foreach ($elements as $object) {
+                            // ajouter l'Id à la chaîne
+                            $ids = $ids . $object->getId();
+                            if ($i != $len - 1){
+                                $ids = $ids . ',';
+                            }
+                            $i++;
+                        }
+                        // passer la chaîne des Id dans la clause
+                        $andX->add("IDENTITY(Donateur.{$column}) IN ({$ids})");
+                    }
+                } else {
+                    // si le champ n'est pas vide
+                    if ($value != '')
+                    {
+                        $andX->add($qb->expr()->like("{'Donateur'}.{$column}", "'{$value}'"));
+                    }
+                }
+            }
+            // si des champs du filtre ont été renseignés, définir la clause where
+            if (!empty($andX->getParts())){
+                $qb->where($andX);
+            }
+            // exécuter la requête et retrouver le résultat
+            $instances = $qb->getQuery()->getResult();
+
+        // générer la page à retourner à partir du template twig "table"
+        // en passant la liste des donateurs
+        return $this->render('Gesdon2Bundle:Donateur:table.html.twig',
+            array(
+                'instances'=> $instances
+            )
+        );
     }
 
     /**

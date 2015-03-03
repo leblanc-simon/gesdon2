@@ -3,6 +3,7 @@
 namespace Gesdon2Bundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Proxies\__CG__\Gesdon2Bundle\Entity\Donateur;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -30,7 +31,7 @@ class DonController extends Controller
         // exécuter la requête
         $instances = $qb->getQuery()->getResult();
 
-        $form = $this->createListForm('Don');
+        $form = $this->createFilterForm('Don');
 
         // si le formulaire de filtrage est soumis
         if ($request->getMethod() == 'POST')
@@ -75,7 +76,7 @@ class DonController extends Controller
                     // si le champ n'est pas vide
                     if ($value != '')
                     {
-                        $andX->add($qb->expr()->like("{'Don'}.{$column}", "'{$value}'"));
+                        $andX->add($qb->expr()->like("Don.{$column}", "'{$value}'"));
                     }
                 }
             }
@@ -102,16 +103,14 @@ class DonController extends Controller
     }
 
     /**
-     * Créer un formulaire pour filtrer la liste des instances d'une entité.
-     *
-     * @param string $entity    Le nom de l'entité
+     * Créer un formulaire pour filtrer la liste des instances.
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function createListForm($entity)
+    private function createFilterForm()
     {
         // créer l'objet type à partir du nom
-        $type = 'Gesdon2Bundle\\Form\\Search' . $entity . "Type";
+        $type = 'Gesdon2Bundle\\Form\\SearchDonType';
         $typeObject = new $type;
 
         // créer le formulaire
@@ -150,12 +149,12 @@ class DonController extends Controller
         // concaténer le namespace et le nom de la classe
         $namespaceClasse = 'Gesdon2Bundle\\Entity\\Don';
         // créer l'objet
-        $entityObject = new $namespaceClasse;
+        $instance = new $namespaceClasse;
 
     	// créer l'objet formulaire à partir du type
         $type = 'Gesdon2Bundle\\Form\\DonType';
         $typeObject = new $type;
-        $form = $this->createForm($typeObject, $entityObject);
+        $form = $this->createForm($typeObject, $instance);
 
         // ajouter le bouton d'envoi
         $form->add('submit', 'submit', array('label' => 'Créer'));
@@ -166,15 +165,15 @@ class DonController extends Controller
         // si le formulaire est validé
         if ($form->isValid()) {
             // récupérer les données du formulaire
-            $entityObject = $form->getData();
+            $instance = $form->getData();
 
             // persister l'objet
             //TODO traiter les erreurs SQL
-            $em->persist($entityObject);
+            $em->persist($instance);
             $em->flush();
 
             return $this->redirect($this->generateUrl('don_edit', array(
-                'id' => $entityObject->getId()
+                'id' => $instance->getId()
             )));
         }
 
