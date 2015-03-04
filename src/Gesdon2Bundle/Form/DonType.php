@@ -15,7 +15,9 @@ class DonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('adresse',new AdresseType())
+            ->add('adresse', 'entity', array(
+                'class' => 'Gesdon2Bundle:Adresse'
+            ) )
             ->add('date', 'date', array(
                 'widget'=> 'single_text',
                 'input' => 'datetime',

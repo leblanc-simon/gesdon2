@@ -10,24 +10,40 @@ $(document).ready(function()
     $.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
 
     /**
-     * Rendre les tableaux réductibles
+     * Ouvrir des fenêtres modales contenant la liste des donateurs
      */
-    // Sur l'élément "légende"
-    $("legend.collapsible")
-        // ajouter una action sur le click
-        .click(function () {
-            var $content = $(this).next();
-            $content.slideToggle(200)
-        })
-        // changer le curseur à "pointeur"
-        .css('cursor','pointer');
-    $("div.content").toggle();
+
+    var donateur_dialog = $( "div.content#donateur" )
+        .load('{{ path("donateur_list") }}')
+        .dialog({
+            autoOpen: false,
+            height: 500,
+            width: 800,
+            modal: true
+    });
+    $("input#donateur").on( "click", function(){
+        donateur_dialog.dialog( "open" );
+    });
+
+    var adresse_dialog = $( "div.content#adresse" )
+        .load('../Adresse/list')
+        .dialog({
+        autoOpen: false,
+        height: 500,
+        width: 800,
+        modal: true
+    });
+    $("#gesdon2_gesdon2bundle_don_adresse").on( "click", function(){
+        adresse_dialog.dialog( "open" );
+    });
 
     /**
-     * Fonction de remplissage dynamique des champs à partir de la liste
+     * Modifier le comportement du tableau pour renvoyer le donateur
      */
+    $('#iframe').contents().find("body").html("blah");
+
     // Remplissage du donateur
-    $("tr#donateur").click(function (){
+/*    $("tr#donateur").click(function (){
         // replissage du type
         // filtre par le texte, et pas par la valeur de la liste qui est un entier
         var type = $(this).find("td.type").html();
@@ -43,32 +59,6 @@ $(document).ready(function()
         $("input#gesdon2_gesdon2bundle_don_adresse_donateur_courriel").val(
             $(this).find("td.courriel").html()
         );
-    });
-
-    // Remplissage de l'adresse
-    $("tr#adresse").click(function (){
-        $("input#gesdon2_gesdon2bundle_don_adresse_adresse1").val(
-            $(this).find("td.adresse1").html()
-        );
-        $("input#gesdon2_gesdon2bundle_don_adresse_adresse2").val(
-            $(this).find("td.adresse2").html()
-        );
-        $("input#gesdon2_gesdon2bundle_don_adresse_codePostal").val(
-            $(this).find("td.codePostal").html()
-        );
-        $("input#gesdon2_gesdon2bundle_don_adresse_ville").val(
-            $(this).find("td.ville").html()
-        );
-        $("input#gesdon2_gesdon2bundle_don_adresse_pays").val(
-            $(this).find("td.pays").html()
-        );
-    });
-
-    /**
-     * Modification du bouton de filtrage
-     */
-    $("#filtrer :button").on('submit', function(e){
-        e.preventDefault();
-    })
+    });*/
 
 });

@@ -9,7 +9,7 @@ donateur_list:
     path:     /Donateur
     defaults: { _controller: Gesdon2Bundle:Donateur:list }
 
-# tableau des donateurs
+# TODO tableau des donateurs
 donateur_table:
     path:     /Donateur/table
     defaults: { _controller: Gesdon2Bundle:Donateur:table }
