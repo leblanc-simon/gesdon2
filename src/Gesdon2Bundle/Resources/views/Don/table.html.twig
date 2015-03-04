@@ -1,9 +1,4 @@
-{# src/Gesdon2Bundle/Resources/views/Don/list.html.twig #}
-{# passer la liste des instances en paramètre lors de la génération #}
-
-{# utilise l'extension twig ToArray pour convertir les objets en tableaux #}
-
-{% form_theme list_form 'form_table_layout.html.twig' %}
+{# src/Gesdon2Bundle/Resources/views/Don/table.html.twig #}
 
 <html>
 <head>
@@ -13,8 +8,6 @@
 </head>
 <body>
 {% block body -%}
-
-    {{ form(list_form) }}
 
     <table id="entities">
         <tr>

@@ -15,99 +15,29 @@ class DonateurController extends Controller
     /**
      * Afficher la liste des instances de l'entité passée en paramètre.
      *
-     * @param Request $request  Tableau des champs utilisés pour le filtre
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction(Request $request)
+    public function searchAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
-        // retrouver la table
-        $repository = $em->getRepository('Gesdon2Bundle:Donateur');
-        // créer un constructeur de requêtes sur la table
-        $qb = $repository->createQueryBuilder('Donateur');
-
-        // exécuter la requête
-        $instances = $qb->getQuery()->getResult();
-
         $form = $this->createFilterForm('Donateur');
-
-        // si le formulaire de filtrage est soumis
-        if ($request->getMethod() == 'POST')
-        {
-            $form->handleRequest($request);
-
-            // retrouver les données depuis le formulaire
-            $filter = $form->getData();
-
-            // créer une expression AND
-            $andX = $qb->expr()->andX();
-            // pour chaque champ du filtre et sa valeur
-            foreach ($filter as $column => $value)
-            {
-                // La fonction IDENTITY permet de filtrer sur la colonne correspondant à la clef étrangère, sans avoir à faire la jointure
-                // Sans cette fonction, Doctirne renvoit l'erreur "Invalid PathExpression. Must be a StateFieldPathExpression"
-                if ($value instanceof ArrayCollection)
-                {
-                    // un champ de formulaire de type 'choice' renvoit une sélection multiple sous forme de tableau
-                    // transformer le tableau en chaînes séparées par des virgules
-                    $elements = $value->toArray();
-                    // si le tableau n'est pas vide...
-                    if (!empty($elements))
-                    {
-                        /** @var string $ids Chaîne des Id*/
-                        $ids = '';
-                        $i = 0;
-                        $len = count($elements);
-                        // pour chaque objet du tableau
-                        foreach ($elements as $object) {
-                            // ajouter l'Id à la chaîne
-                            $ids = $ids . $object->getId();
-                            if ($i != $len - 1){
-                                $ids = $ids . ',';
-                            }
-                            $i++;
-                        }
-                        // passer la chaîne des Id dans la clause
-                        $andX->add("IDENTITY(Donateur.{$column}) IN ({$ids})");
-                    }
-                } else {
-                    // si le champ n'est pas vide
-                    if ($value != '')
-                    {
-                        $andX->add($qb->expr()->like("{'Donateur'}.{$column}", "'{$value}'"));
-                    }
-                }
-            }
-            // si des champs du filtre ont été renseignés, définir la clause where
-            if (!empty($andX->getParts())){
-                $qb->where($andX);
-            }
-            // exécuter la requête et retrouver le résultat
-            $instances = $qb->getQuery()->getResult();
-        }
         // générer la page à retourner à partir du template twig "list"
-        // en passant la liste des instances de l'entité
-        return $this->render('Gesdon2Bundle:Donateur:list.html.twig',
+        return $this->render('Gesdon2Bundle:Donateur:search.html.twig',
             array(
                 'list_form' => $form->createView(), // créer la vue à partir du formulaire
-                'instances'=> $instances,
                 'entity'  => 'Donateur'
             )
         );
     }
 
     /**
-     * Créer un formulaire pour filtrer la liste des instances d'une entité.
-     *
-     * @param string $entity    Le nom de l'entité
+     * Créer un formulaire pour rechercher des donateurs.
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function createFilterForm($entity)
+    private function createFilterForm()
     {
         // créer l'objet type à partir du nom
-        $type = 'Gesdon2Bundle\\Form\\Search' . $entity . "Type";
+        $type = 'Gesdon2Bundle\\Form\\SearchDonateurType';
         $typeObject = new $type;
 
         // créer le formulaire
@@ -116,23 +46,22 @@ class DonateurController extends Controller
             //pas de données initiales
             null,
             array(
-                'action' => $this->generateUrl('donateur_list'),
-                'method' => 'POST',
+                'action' => $this->generateUrl('donateur_search'),
+                'method' => 'POST'
             )
         );
 
-        $form->add('filtrer', 'submit', array('label' => 'Filtrer'));
+        $form->add('donateur_search', 'submit', array('label' => 'Rechercher'));
 
         return $form;
     }
 
     /**
-     * TODO Créer le tableau HTML des donateurs
+     * Créer le tableau HTML des donateurs
      *
-     * @param $form_data
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableAction($form_data){
+    public function tableAction(){
         $em = $this->getDoctrine()->getManager();
 
         // retrouver la table
@@ -140,51 +69,51 @@ class DonateurController extends Controller
         // créer un constructeur de requêtes sur la table
         $qb = $repository->createQueryBuilder('Donateur');
 
-            // retrouver les données du formulaire
-            $filter = $form_data;
-
-            // créer une expression AND
-            $andX = $qb->expr()->andX();
-            // pour chaque champ du filtre et sa valeur
-            foreach ($filter as $column => $value)
-            {
-                // La fonction IDENTITY permet de filtrer sur la colonne correspondant à la clef étrangère, sans avoir à faire la jointure
-                // Sans cette fonction, Doctirne renvoit l'erreur "Invalid PathExpression. Must be a StateFieldPathExpression"
-                if ($value instanceof ArrayCollection)
-                {
-                    // un champ de formulaire de type 'choice' renvoit une sélection multiple sous forme de tableau
-                    // transformer le tableau en chaînes séparées par des virgules
-                    $elements = $value->toArray();
-                    // si le tableau n'est pas vide...
-                    if (!empty($elements))
-                    {
-                        /** @var string $ids Chaîne des Id*/
-                        $ids = '';
-                        $i = 0;
-                        $len = count($elements);
-                        // pour chaque objet du tableau
-                        foreach ($elements as $object) {
-                            // ajouter l'Id à la chaîne
-                            $ids = $ids . $object->getId();
-                            if ($i != $len - 1){
-                                $ids = $ids . ',';
+        // retrouver les données du formulaire
+        $filter = $_POST;
+            if (!empty($filter)) {
+                // créer une expression AND
+                $andX = $qb->expr()->andX();
+                // pour chaque champ du filtre et sa valeur
+                foreach ($filter as $column => $value) {
+                    // La fonction IDENTITY permet de filtrer sur la colonne correspondant à la clef étrangère, sans avoir à faire la jointure
+                    // Sans cette fonction, Doctirne renvoit l'erreur "Invalid PathExpression. Must be a StateFieldPathExpression"
+                    // TODO gérer les Types! l'erreur Invalid PathExpression remet ça!
+                    if (is_array($value)) {
+                        // un champ de formulaire de type 'choice' renvoit une sélection multiple sous forme de tableau
+                        // transformer le tableau en chaînes séparées par des virgules
+                        //$elements = $value->toArray();
+                        // si le tableau n'est pas vide...
+                        if (!empty($elements)) {
+                            /** @var string $ids Chaîne des Id */
+                            $ids = '';
+                            $i = 0;
+                            $len = count($elements);
+                            // pour chaque objet du tableau
+                            foreach ($elements as $object) {
+                                // ajouter l'Id à la chaîne
+                                $ids = $ids . $object->getId();
+                                if ($i != $len - 1) {
+                                    $ids = $ids . ',';
+                                }
+                                $i++;
                             }
-                            $i++;
+                            // passer la chaîne des Id dans la clause
+                            $andX->add("IDENTITY(Donateur.{$column}) IN ({$ids})");
                         }
-                        // passer la chaîne des Id dans la clause
-                        $andX->add("IDENTITY(Donateur.{$column}) IN ({$ids})");
-                    }
-                } else {
-                    // si le champ n'est pas vide
-                    if ($value != '')
-                    {
-                        $andX->add($qb->expr()->like("{'Donateur'}.{$column}", "'{$value}'"));
+                    } else {
+                        // si le champ n'est pas vide
+                        if ($value != '') {
+                            $andX->add($qb->expr()->like(
+                                "Donateur.{$column}",
+                                "'{$value}'"));
+                        }
                     }
                 }
-            }
-            // si des champs du filtre ont été renseignés, définir la clause where
-            if (!empty($andX->getParts())){
-                $qb->where($andX);
+                // si des champs du filtre ont été renseignés, définir la clause where
+                if (!empty($andX->getParts())) {
+                    $qb->where($andX);
+                }
             }
             // exécuter la requête et retrouver le résultat
             $instances = $qb->getQuery()->getResult();
@@ -199,7 +128,7 @@ class DonateurController extends Controller
     }
 
     /**
-     * Générer le formulaire de création d'instance de l'entité passée en paramètre.
+     * Générer le formulaire de création
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -255,9 +184,9 @@ class DonateurController extends Controller
     }
 
     /**
-     * Afficher un formulaire pour modifier un instance.
+     * Afficher un formulaire pour modifier un donateur.
      *
-     * @param int $id           L'identifiant de l'instance
+     * @param int $id           L'identifiant du donateur
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
@@ -286,10 +215,10 @@ class DonateurController extends Controller
     }
 
     /**
-     * Créer un formulaire pour modifier une instance.
+     * Créer un formulaire pour modifier un donateur.
      *
-     * @param object $instance  L'objet d'instance
-     * @param int $id           L'identifiant de l'isntance
+     * @param object $instance  L'objet Donateur
+     * @param int $id           L'identifiant du donateur
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -320,14 +249,14 @@ class DonateurController extends Controller
     }
 
     /**
-     * Modifier une instance.
+     * Modifier un donateur
      *
      * @param Request $request
-     * @param int $id           L'identifiant de l'instance
+     * @param int $id           L'identifiant ddu donateur
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @Route("/{entity}/{id}", name="update")
+     * @Route("/Donateur/{id}", name="update")
      * @Method("PUT")
      * @Template("Gesdon2Bundle:Donateur:edit.html.twig")
      */
@@ -360,10 +289,10 @@ class DonateurController extends Controller
     }
 
     /**
-     * Supprimer une instance.
+     * Supprimer un donateur.
      *
      * @param Request $request
-     * @param int $id           l'identifiant de l'instance
+     * @param int $id           l'identifiant du donateur
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
@@ -390,13 +319,13 @@ class DonateurController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('donateur_list'));
+        return $this->redirect($this->generateUrl('donateur_search'));
     }
 
     /**
-     * Créer un formulaire pour supprimer une instance.
+     * Créer un formulaire pour supprimer un donateur.
      *
-     * @param int $id           L'identifiant de l'instance
+     * @param int $id           L'identifiant du donateur
      *
      * @return \Symfony\Component\Form\Form Le formulaire
      */

@@ -1,0 +1,55 @@
+{# src/Gesdon2Bundle/Resources/views/Don/search.html.twig #}
+
+{% form_theme list_form 'form_table_layout.html.twig' %}
+
+<html>
+<head>
+{% stylesheets '@Gesdon2Bundle/Resources/public/css/*' %}
+    <link rel="stylesheet" href="{{ asset_url }}" type="text/css">
+{% endstylesheets %}
+</head>
+<body>
+{% block body -%}
+
+    {{ form(list_form) }}
+
+    <div id="don_table">
+        {# charger le tableau ici #}
+    </div>
+
+
+    {# TODO séparer dans un fichier#}
+    <script type="text/javascript">
+        $(document).ready(function( ) {
+            $("#don_search").click(function( event ){
+                // empêcher le submit
+                event.preventDefault();
+                // récupérer le formulaire (le nom du formulaire est défini dans le Type)
+                var form = $('#don_form');
+                //requête ajax, appel de la route don_table
+                $.ajax({
+                    type    : 'POST',
+                    url     : "{{ path('don_table') }}",
+                    data    : form.serialize(),
+                    //afficher l'erreur en cas de problème
+                    error:function(msg, string){
+                        alert( "Error !: " + string );
+                    },
+                    success:function(htmlResponse){
+                        //mettre à jour le div avec les données reçues
+                        //vider la div et on le cache
+                        $("#don_table").empty().hide();
+                        //affecter les resultats au div
+                        $("#don_table").append(htmlResponse);
+                        //afficher les resultats avec la transition
+                        $('#don_table').fadeIn(100);
+                    }
+                });
+            });
+        })
+    </script>
+
+
+{% endblock %}
+</body>
+</html>

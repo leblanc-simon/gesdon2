@@ -13,100 +13,25 @@ class AdresseController extends Controller
 {
 
     /**
-     * Afficher la liste des instances de l'entité passée en paramètre.
+     * Afficher la liste des adresses.
      *
-     * @param Request $request  Tableau des champs utilisés pour le filtre
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction(Request $request)
+    public function searchAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
-        // retrouver la table
-        $repository = $em->getRepository('Gesdon2Bundle:Adresse');
-        // créer un constructeur de requêtes sur la table
-        $qb = $repository->createQueryBuilder('Adresse');
-
-        // exécuter la requête
-        $instances = $qb->getQuery()->getResult();
-
-        // retrouver les attributs de l'entité
-        // TODO ne renvoie pas les clés étrangères. Trouver autre méthode.
-        $fields = $em ->getClassMetadata('Gesdon2Bundle:Adresse')->getColumnNames();
-
         $form = $this->createFilterForm('Adresse');
 
-        // si le formulaire de filtrage est soumis
-        if ($request->getMethod() == 'POST')
-        {
-            $form->handleRequest($request);
-
-            // retrouver les données depuis le formulaire
-            $filter = $form->getData();
-
-            // créer une expression AND
-            $andX = $qb->expr()->andX();
-            // pour chaque champ du filtre et sa valeur
-            foreach ($filter as $column => $value)
-            {
-                // La fonction IDENTITY permet de filtrer sur la colonne correspondant à la clef étrangère, sans avoir à faire la jointure
-                // Sans cette fonction, Doctirne renvoit l'erreur "Invalid PathExpression. Must be a StateFieldPathExpression"
-                if ($value instanceof ArrayCollection)
-                {
-                    // un champ de formulaire de type 'choice' renvoit une sélection multiple sous forme de tableau
-                    // transformer le tableau en chaînes séparées par des virgules
-                    $elements = $value->toArray();
-                    // si le tableau n'est pas vide...
-                    if (!empty($elements))
-                    {
-                        /** @var string $ids Chaîne des Id*/
-                        $ids = '';
-                        $i = 0;
-                        $len = count($elements);
-                        // pour chaque objet du tableau
-                        foreach ($elements as $object) {
-                            // ajouter l'Id à la chaîne
-                            $ids = $ids . $object->getId();
-                            if ($i != $len - 1){
-                                $ids = $ids . ',';
-                            }
-                            $i++;
-                        }
-                        // passer la chaîne des Id dans la clause
-                        $andX->add("IDENTITY(Adresse.{$column}) IN ({$ids})");
-                    }
-                } else {
-                    // si le champ n'est pas vide
-                    if ($value != '')
-                    {
-                        $andX->add($qb->expr()->like("Adresse.{$column}", "'{$value}'"));
-                    }
-                }
-            }
-            // si des champs du filtre ont été renseignés, définir la clause where
-            if (!empty($andX->getParts())){
-                $qb->where($andX);
-            }
-
-            // exécuter la requête et retrouver le résultat
-            $instances = $qb->getQuery()->getResult();
-
-        }
-
-
         // générer la page à retourner à partir du template twig "list"
-        // en passant la liste des instances de l'entité
-        return $this->render('Gesdon2Bundle:Adresse:list.html.twig',
+        return $this->render('Gesdon2Bundle:Adresse:search.html.twig',
             array(
                 'list_form' => $form->createView(), // créer la vue à partir du formulaire
-                'instances'=> $instances,
                 'entity'  => 'Adresse'
             )
         );
     }
 
     /**
-     * Créer un formulaire pour filtrer la liste des instances d'une entité.
+     * Créer un formulaire pour rechercher des adresses.
      *
      * @param string $entity    Le nom de l'entité
      *
@@ -125,19 +50,89 @@ class AdresseController extends Controller
             null,
             array(
                 'action' => $this->generateUrl(
-                    'adresse_list'
+                    'adresse_search'
                 ),
                 'method' => 'POST',
             )
         );
 
-        $form->add('submit', 'submit', array('label' => 'Filtrer'));
+        $form->add('adresse_search', 'submit', array('label' => 'Rechercher'));
 
         return $form;
     }
 
     /**
-     * Générer le formulaire de création d'instance de l'entité passée en paramètre.
+     * Créer le tableau HTML des adresses
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function tableAction(){
+        $em = $this->getDoctrine()->getManager();
+
+        // retrouver la table
+        $repository = $em->getRepository('Gesdon2Bundle:Adresse');
+        // créer un constructeur de requêtes sur la table
+        $qb = $repository->createQueryBuilder('Adresse');
+
+        // retrouver les données du formulaire
+        $filter = $_POST;
+        if (!empty($filter)) {
+            // créer une expression AND
+            $andX = $qb->expr()->andX();
+            // pour chaque champ du filtre et sa valeur
+            foreach ($filter as $column => $value) {
+                // La fonction IDENTITY permet de filtrer sur la colonne correspondant à la clef étrangère, sans avoir à faire la jointure
+                // Sans cette fonction, Doctirne renvoit l'erreur "Invalid PathExpression. Must be a StateFieldPathExpression"
+                if (is_array($value)) {
+                    // un champ de formulaire de type 'choice' renvoit une sélection multiple sous forme de tableau
+                    // transformer le tableau en chaînes séparées par des virgules
+                    //$elements = $value->toArray();
+                    // si le tableau n'est pas vide...
+                    if (!empty($elements)) {
+                        /** @var string $ids Chaîne des Id */
+                        $ids = '';
+                        $i = 0;
+                        $len = count($elements);
+                        // pour chaque objet du tableau
+                        foreach ($elements as $object) {
+                            // ajouter l'Id à la chaîne
+                            $ids = $ids . $object->getId();
+                            if ($i != $len - 1) {
+                                $ids = $ids . ',';
+                            }
+                            $i++;
+                        }
+                        // passer la chaîne des Id dans la clause
+                        $andX->add("IDENTITY(Adresse.{$column}) IN ({$ids})");
+                    }
+                } else {
+                    // si le champ n'est pas vide
+                    if ($value != '') {
+                        $andX->add($qb->expr()->like(
+                            "Adresse.{$column}",
+                            "'{$value}'"));
+                    }
+                }
+            }
+            // si des champs du filtre ont été renseignés, définir la clause where
+            if (!empty($andX->getParts())) {
+                $qb->where($andX);
+            }
+        }
+        // exécuter la requête et retrouver le résultat
+        $instances = $qb->getQuery()->getResult();
+
+        // générer la page à retourner à partir du template twig "table"
+        // en passant la liste des donateurs
+    return $this->render('Gesdon2Bundle:Adresse:table.html.twig',
+            array(
+                'instances'=> $instances
+            )
+        );
+    }
+
+    /**
+     * Générer le formulaire de création d'Adresse.
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -328,7 +323,7 @@ class AdresseController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('adresse_list'));
+        return $this->redirect($this->generateUrl('adresse_search'));
     }
 
     /**

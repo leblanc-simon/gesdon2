@@ -19,7 +19,7 @@ class DonController extends Controller
      * @param Request $request  Tableau des champs utilisés pour le filtre
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction(Request $request)
+    public function searchAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -93,7 +93,7 @@ class DonController extends Controller
 
         // générer la page à retourner à partir du template twig "list"
         // en passant la liste des instances de l'entité
-        return $this->render('Gesdon2Bundle:Don:list.html.twig',
+        return $this->render('Gesdon2Bundle:Don:search.html.twig',
             array(
                 'list_form' => $form->createView(), // créer la vue à partir du formulaire
                 'instances'=> $instances,
@@ -120,7 +120,7 @@ class DonController extends Controller
             null,
             array(
                 'action' => $this->generateUrl(
-                    'don_list'
+                    'don_search'
                 ),
                 'method' => 'POST',
             )
@@ -323,7 +323,7 @@ class DonController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('don_list'));
+        return $this->redirect($this->generateUrl('don_search'));
     }
 
     /**

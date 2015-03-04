@@ -42,6 +42,8 @@ class SearchAdresseType extends AbstractType
     {
         $resolver->setDefaults(array(
             //'data_class' => 'Gesdon2Bundle\Entity\Adresse'
+            'attr' => array('id' => 'adresse_form'),
+            'csrf_protection' => false,
         ));
     }
 

@@ -1,7 +1,4 @@
-{# src/Gesdon2Bundle/Resources/views/Adresse/list.html.twig #}
-{# passer la liste des instances en paramètre lors de la génération #}
-
-{% form_theme list_form 'form_table_layout.html.twig' %}
+{# src/Gesdon2Bundle/Resources/views/Adresse/table.html.twig #}
 
 <html>
 <head>
@@ -9,22 +6,9 @@
     <link rel="stylesheet" href="{{ asset_url }}" type="text/css">
 {% endstylesheets %}
 </head>
+
 <body>
 {% block body -%}
-
-    {{ form_start(list_form) }}
-    {{ form_errors(list_form) }}
-
-    {{ form_row(list_form.donateur) }}
-    {{ form_row(list_form.adresse1) }}
-    {{ form_row(list_form.adresse2) }}
-    {{ form_row(list_form.codePostal) }}
-    {{ form_row(list_form.ville) }}
-    {{ form_row(list_form.pays) }}
-
-    {{ form_rest(list_form) }}
-    {{ form_end(list_form) }}
-
     <table id="entities">
         <tr>
             <th>ID</th>
@@ -35,7 +19,7 @@
             <th>Ville</th>
             <th>Pays</th>
         </tr>
-    {# pour chaque instance de l'entité... #}
+        {# pour chaque instance de l'entité... #}
         {% for instance in instances %}
             {# faire une ligne sur deux de classe 'alt', pour mise en forme #}
             {# définir l'id à "adresse" pour identifier dans jQuery #}
@@ -55,7 +39,6 @@
             </tr>
         {% endfor %}
     </table>
-
 
 {% endblock %}
 </body>

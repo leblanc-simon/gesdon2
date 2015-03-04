@@ -12,28 +12,27 @@ $(document).ready(function()
     /**
      * Ouvrir des fenêtres modales contenant la liste des donateurs
      */
-
-    var donateur_dialog = $( "div.content#donateur" )
-        .load('{{ path("donateur_list") }}')
-        .dialog({
-            autoOpen: false,
-            height: 500,
-            width: 800,
-            modal: true
-    });
     $("input#donateur").on( "click", function(){
+        var donateur_dialog = $( "div.content#donateur" )
+            .load('../Donateur')
+            .dialog({
+                autoOpen: false,
+                height: 500,
+                width: 800,
+                modal: true
+            });
         donateur_dialog.dialog( "open" );
     });
 
-    var adresse_dialog = $( "div.content#adresse" )
-        .load('../Adresse/list')
-        .dialog({
-        autoOpen: false,
-        height: 500,
-        width: 800,
-        modal: true
-    });
     $("#gesdon2_gesdon2bundle_don_adresse").on( "click", function(){
+        var adresse_dialog = $( "div.content#adresse" )
+            .load('../Adresse')
+            .dialog({
+                autoOpen: false,
+                height: 500,
+                width: 800,
+                modal: true
+            });
         adresse_dialog.dialog( "open" );
     });
 

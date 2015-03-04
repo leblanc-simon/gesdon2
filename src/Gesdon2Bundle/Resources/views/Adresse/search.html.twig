@@ -1,0 +1,69 @@
+{# src/Gesdon2Bundle/Resources/views/Adresse/list.html.twig #}
+
+{% form_theme list_form 'form_table_layout.html.twig' %}
+
+<html>
+<head>
+    {% stylesheets '@Gesdon2Bundle/Resources/public/css/*' %}
+    <link rel="stylesheet" href="{{ asset_url }}" type="text/css">
+    {% endstylesheets %}
+    {% stylesheets 'bundles/gesdon2/js/jquery-ui/jquery-ui.min.css' filter='cssrewrite'%}
+    <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+    {% endstylesheets %}
+    {% javascripts '@Gesdon2Bundle/Resources/public/js/jquery-2.1.3.min.js'%}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts '@Gesdon2Bundle/Resources/public/js/jquery-ui/jquery-ui.min.js'%}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+</head>
+<body>
+{% block body -%}
+
+    {{ form_start(list_form) }}
+    {{ form_errors(list_form) }}
+    {{ form(list_form) }}
+    {{ form_end(list_form) }}
+
+    <div id="adresse_table">
+        {# charger le tableau ici #}
+    </div>
+
+
+    {# TODO séparer dans un fichier#}
+    {# TODO le script fonctionne quand on se trouve sur la page de recherche, mais lorsqu'on affiche la page dans une modale sur le formulaire de création de dons, les scripts de la page Adresse et la page Donateur semblent interférer, et l'un prend le pas sur l'autre. En conséquence, le bouton de recherche des adresses se voit bien affecter une nouvelle action, mais pas celui des donateurs, ou inversement. Cela ne semble se produire qu'en mode dev!#}
+    <script type="text/javascript">
+        $(document).ready(function( ) {
+            //au click sur le bouton 'filtrer'
+            $("#adresse_search").click(function( event ){
+                // empêcher le submit
+                event.preventDefault();
+                // récupérer le formulaire (le nom du formulaire est défini dans le Type)
+                var form = $('#adresse_form');
+                //requête ajax, appel de la route adresse_table
+                $.ajax({
+                    type    : 'POST',
+                    url     : "{{ path('adresse_table') }}",
+                    data    : form.serialize(),
+                    //afficher l'erreur en cas de problème
+                    error:function(msg, string){
+                        alert( "Error !: " + string );
+                    },
+                    success:function(htmlResponse){
+                        //mettre à jour le div avec les données reçues
+                        //vider la div et on le cache
+                        $("#adresse_table").empty().hide();
+                        //affecter les resultats au div
+                        $("#adresse_table").append(htmlResponse);
+                        //afficher les resultats avec la transition
+                        $('#adresse_table').fadeIn(100);
+                    }
+                });
+            });
+        })
+    </script>
+
+
+{% endblock %}
+</body>
+</html>

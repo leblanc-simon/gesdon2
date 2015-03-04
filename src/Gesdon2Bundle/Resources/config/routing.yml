@@ -4,12 +4,12 @@ index:
     defaults: { _controller: Gesdon2Bundle:Default:index }
 
 
-# page d'affichage de la liste des donateurs
-donateur_list:
+# page de recherche des donateurs
+donateur_search:
     path:     /Donateur
-    defaults: { _controller: Gesdon2Bundle:Donateur:list }
+    defaults: { _controller: Gesdon2Bundle:Donateur:search }
 
-# TODO tableau des donateurs
+# tableau des donateurs
 donateur_table:
     path:     /Donateur/table
     defaults: { _controller: Gesdon2Bundle:Donateur:table }
@@ -37,10 +37,17 @@ donateur_update:
     defaults: { _controller: Gesdon2Bundle:Donateur:update }
 
 
-# page d'affichage de la liste des adresses
-adresse_list:
+# page de recherche des adresses
+adresse_search:
     path:     /Adresse
-    defaults: { _controller: Gesdon2Bundle:Adresse:list }
+    defaults: { _controller: Gesdon2Bundle:Adresse:search }
+
+# tableau des adresses
+adresse_table:
+    path:     /Adresse/table
+    defaults: { _controller: Gesdon2Bundle:Adresse:table }
+    requirements:
+        _method:    POST
 
 # formulaire de création des adresses
 adresse_new:
@@ -62,10 +69,10 @@ adresse_update:
     path:     /Adresse/update/{id}
     defaults: { _controller: Gesdon2Bundle:Adresse:update }
 
-# page d'affichage de la liste des dons
-don_list:
+# page de recherche des dons
+don_search:
     path:     /Don
-    defaults: { _controller: Gesdon2Bundle:Don:list }
+    defaults: { _controller: Gesdon2Bundle:Don:search }
 
 # formulaire de création des dons
 don_new:

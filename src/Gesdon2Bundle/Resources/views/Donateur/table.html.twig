@@ -1,7 +1,4 @@
-{# src/Gesdon2Bundle/Resources/views/Donateur/list.html.twig #}
-{# passer la liste des instances en paramètre lors de la génération #}
-
-{% form_theme list_form 'form_table_layout.html.twig' %}
+{# src/Gesdon2Bundle/Resources/views/Donateur/table.html.twig #}
 
 <html>
 <head>
@@ -9,9 +6,9 @@
     <link rel="stylesheet" href="{{ asset_url }}" type="text/css">
 {% endstylesheets %}
 </head>
+
 <body>
 {% block body -%}
-
     <table id="entities">
         <tr>
             <th>ID</th>
@@ -32,12 +29,11 @@
                 <td class="courriel">{{ instance.courriel }}</td>
                 {# afficher les liens vers le formulaire de modification dans la dernière colonne #}
                 <td>
-                    <a href="{{ path('donateur_edit', { 'id': instance.id }) }}"></a>
+                    <a href="{{ path('donateur_edit', { 'id': instance.id }) }}">O</a>
                 </td>
             </tr>
         {% endfor %}
     </table>
-
 
 {% endblock %}
 </body>

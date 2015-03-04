@@ -35,6 +35,8 @@ class SearchDonateurType extends AbstractType
     {
         $resolver->setDefaults(array(
             //'data_class' => 'Gesdon2Bundle\Entity\Donateur'
+            'attr' => array('id' => 'donateur_form'),
+            'csrf_protection' => false,
         ));
     }
 
