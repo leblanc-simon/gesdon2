@@ -33,15 +33,6 @@ class SearchDonType extends AbstractType
             // TODO trouver un moyen de filtrer par période
             ->add('dateFinRecurrence',  'date',     array('required' => false))
             ->add('courriel',       'text',     array('required' => false))
-            // TODO formulaire imbriqué ou popup
-            ->add(
-                'donateur','entity',array(
-                    'class' => 'Gesdon2Bundle:Donateur',
-                    'property' => 'nom',
-                    'required' => false,
-                    'multiple' => true,
-                )
-            )
             ->add('adresse','entity',
                 array
                 (

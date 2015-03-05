@@ -24,6 +24,8 @@
     {{ form_errors(list_form) }}
     {{ form(list_form) }}
     {{ form_end(list_form) }}
+    <a href="{{ path('adresse_new') }}">Ajouter</a>
+
 
     <div id="adresse_table">
         {# charger le tableau ici #}
@@ -31,7 +33,6 @@
 
 
     {# TODO séparer dans un fichier#}
-    {# TODO le script fonctionne quand on se trouve sur la page de recherche, mais lorsqu'on affiche la page dans une modale sur le formulaire de création de dons, les scripts de la page Adresse et la page Donateur semblent interférer, et l'un prend le pas sur l'autre. En conséquence, le bouton de recherche des adresses se voit bien affecter une nouvelle action, mais pas celui des donateurs, ou inversement. Cela ne semble se produire qu'en mode dev!#}
     <script type="text/javascript">
         $(document).ready(function( ) {
             //au click sur le bouton 'filtrer'
@@ -50,19 +51,41 @@
                         alert( "Error !: " + string );
                     },
                     success:function(htmlResponse){
-                        //mettre à jour le div avec les données reçues
-                        //vider la div et on le cache
-                        $("#adresse_table").empty().hide();
+                        //mettre à jour la div avec les données reçues
+                        //vider la div
+                        $("#adresse_table").empty().hide()
                         //affecter les resultats au div
-                        $("#adresse_table").append(htmlResponse);
+                        .append(htmlResponse)
                         //afficher les resultats avec la transition
-                        $('#adresse_table').fadeIn(100);
+                        .fadeIn(100);
                     }
                 });
             });
+
+            // Ouvrir une fenêtre modale contenant la liste des donateurs
+            var donateur_id;
+            $("option").on( "click", function(){
+                var donateur_dialog = $( "div.content#donateur" )
+                        .load('../Donateur')
+                        .dialog({
+                            autoOpen: false,
+                            height: 800,
+                            width: 800,
+                            modal: true
+                        });
+                donateur_dialog
+                        .dialog( "open" )
+                        .on('click', '#donateur', function(){
+                            donateur_id = $(this).find(".id").text();
+                            donateur_dialog.dialog("destroy");
+                            $("select#donateur").val(donateur_id);
+                        });
+            });
         })
     </script>
-
+<div class="content" id="donateur" hidden>
+    {# charger la fenêtre modale ici #}
+</div>
 
 {% endblock %}
 </body>

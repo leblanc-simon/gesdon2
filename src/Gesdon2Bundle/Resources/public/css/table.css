@@ -19,7 +19,11 @@
     color: #ffffff;
 }
 
-#entities tr.alt td {
+#entities tr.alt:not(.hover){
     color: #000000;
     background-color: #EAF2D3;
+}
+
+#entities tr.hover {
+    background-color: #8E9C48;
 }

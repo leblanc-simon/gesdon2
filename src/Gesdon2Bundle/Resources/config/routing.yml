@@ -74,6 +74,13 @@ don_search:
     path:     /Don
     defaults: { _controller: Gesdon2Bundle:Don:search }
 
+# tableau des donateurs
+don_table:
+    path:     /Don/table
+    defaults: { _controller: Gesdon2Bundle:Don:table }
+    requirements:
+        _method:    POST
+
 # formulaire de création des dons
 don_new:
     path:     /Don/new

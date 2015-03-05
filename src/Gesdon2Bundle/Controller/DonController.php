@@ -14,96 +14,24 @@ class DonController extends Controller
 {
 
     /**
-     * Afficher la liste des instances de l'entité passée en paramètre.
+     * Afficher la liste des dons.
      *
-     * @param Request $request  Tableau des champs utilisés pour le filtre
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchAction(Request $request)
+    public function searchAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
-        // retrouver la table
-        $repository = $em->getRepository('Gesdon2Bundle:Don');
-        // créer un constructeur de requêtes sur la table
-        $qb = $repository->createQueryBuilder('Don');
-
-        // exécuter la requête
-        $instances = $qb->getQuery()->getResult();
-
         $form = $this->createFilterForm('Don');
 
-        // si le formulaire de filtrage est soumis
-        if ($request->getMethod() == 'POST')
-        {
-            $form->handleRequest($request);
-
-            // retrouver les données depuis le formulaire
-            $filter = $form->getData();
-
-            // créer une expression AND
-            $andX = $qb->expr()->andX();
-            // pour chaque champ du filtre et sa valeur
-            foreach ($filter as $column => $value)
-            {
-                // La fonction IDENTITY permet de filtrer sur la colonne correspondant à la clef étrangère, sans avoir à faire la jointure
-                // Sans cette fonction, Doctirne renvoit l'erreur "Invalid PathExpression. Must be a StateFieldPathExpression"
-                if ($value instanceof ArrayCollection)
-                {
-                    // un champ de formulaire de type 'choice' renvoit une sélection multiple sous forme de tableau
-                    // transformer le tableau en chaînes séparées par des virgules
-                    $elements = $value->toArray();
-                    // si le tableau n'est pas vide...
-                    if (!empty($elements))
-                    {
-                        /** @var string $ids Chaîne des Id*/
-                        $ids = '';
-                        $i = 0;
-                        $len = count($elements);
-                        // pour chaque objet du tableau
-                        foreach ($elements as $object) {
-                            // ajouter l'Id à la chaîne
-                            $ids = $ids . $object->getId();
-                            if ($i != $len - 1){
-                                $ids = $ids . ',';
-                            }
-                            $i++;
-                        }
-                        // passer la chaîne des Id dans la clause
-                        $andX->add("IDENTITY(Don.{$column}) IN ({$ids})");
-                    }
-                } else {
-                    // si le champ n'est pas vide
-                    if ($value != '')
-                    {
-                        $andX->add($qb->expr()->like("Don.{$column}", "'{$value}'"));
-                    }
-                }
-            }
-            // si des champs du filtre ont été renseignés, définir la clause where
-            if (!empty($andX->getParts())){
-                $qb->where($andX);
-            }
-
-            // exécuter la requête et retrouver le résultat
-            $instances = $qb->getQuery()->getResult();
-
-        }
-
-
-        // générer la page à retourner à partir du template twig "list"
-        // en passant la liste des instances de l'entité
+        // générer la page à retourner à partir du template twig "search"
         return $this->render('Gesdon2Bundle:Don:search.html.twig',
             array(
                 'list_form' => $form->createView(), // créer la vue à partir du formulaire
-                'instances'=> $instances,
-                'entity'  => 'Don'
             )
         );
     }
 
     /**
-     * Créer un formulaire pour filtrer la liste des instances.
+     * Créer un formulaire pour rechercher des dons.
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -126,13 +54,84 @@ class DonController extends Controller
             )
         );
 
-        $form->add('submit', 'submit', array('label' => 'Filtrer'));
+        $form->add('don_search', 'submit', array('label' => 'Rechercher'));
 
         return $form;
     }
 
     /**
-     * Générer le formulaire de création d'instance de l'entité passée en paramètre.
+     * Créer le tableau HTML des dons
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function tableAction(){
+        $em = $this->getDoctrine()->getManager();
+
+        // retrouver la table
+        $repository = $em->getRepository('Gesdon2Bundle:Don');
+        // créer un constructeur de requêtes sur la table
+        $qb = $repository->createQueryBuilder('Don');
+
+        // retrouver les données du formulaire
+        $filter = $_POST;
+        if (!empty($filter)) {
+            // créer une expression AND
+            $andX = $qb->expr()->andX();
+            // pour chaque champ du filtre et sa valeur
+            foreach ($filter as $column => $value) {
+                // La fonction IDENTITY permet de filtrer sur la colonne correspondant à la clef étrangère, sans avoir à faire la jointure
+                // Sans cette fonction, Doctirne renvoit l'erreur "Invalid PathExpression. Must be a StateFieldPathExpression"
+                // TODO gérer les Types! l'erreur Invalid PathExpression remet ça!
+                if (is_array($value)) {
+                    // un champ de formulaire de type 'choice' renvoit une sélection multiple sous forme de tableau
+                    // transformer le tableau en chaînes séparées par des virgules
+                    //$elements = $value->toArray();
+                    // si le tableau n'est pas vide...
+                    if (!empty($elements)) {
+                        /** @var string $ids Chaîne des Id */
+                        $ids = '';
+                        $i = 0;
+                        $len = count($elements);
+                        // pour chaque objet du tableau
+                        foreach ($elements as $object) {
+                            // ajouter l'Id à la chaîne
+                            $ids = $ids . $object->getId();
+                            if ($i != $len - 1) {
+                                $ids = $ids . ',';
+                            }
+                            $i++;
+                        }
+                        // passer la chaîne des Id dans la clause
+                        $andX->add("IDENTITY(Don.{$column}) IN ({$ids})");
+                    }
+                } else {
+                    // si le champ n'est pas vide
+                    if ($value != '') {
+                        $andX->add($qb->expr()->like(
+                            "Don.{$column}",
+                            "'{$value}'"));
+                    }
+                }
+            }
+            // si des champs du filtre ont été renseignés, définir la clause where
+            if (!empty($andX->getParts())) {
+                $qb->where($andX);
+            }
+        }
+        // exécuter la requête et retrouver le résultat
+        $instances = $qb->getQuery()->getResult();
+
+        // générer la page à retourner à partir du template twig "table"
+        // en passant la liste des donateurs
+        return $this->render('Gesdon2Bundle:Don:table.html.twig',
+            array(
+                'instances'=> $instances
+            )
+        );
+    }
+
+    /**
+     * Générer le formulaire de création de don.
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -188,9 +187,9 @@ class DonController extends Controller
     }
 
     /**
-     * Afficher un formulaire pour modifier un instance.
+     * Afficher un formulaire pour modifier un don.
      *
-     * @param int $id           L'identifiant de l'instance
+     * @param int $id           L'identifiant du don
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
@@ -219,10 +218,10 @@ class DonController extends Controller
     }
 
     /**
-     * Créer un formulaire pour modifier une instance.
+     * Créer un formulaire pour modifier un don.
      *
-     * @param object $instance  L'objet d'instance
-     * @param int $id           L'identifiant de l'isntance
+     * @param object $instance  L'objet Don
+     * @param int $id           L'identifiant du don
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -253,14 +252,14 @@ class DonController extends Controller
     }
 
     /**
-     * Modifier une instance.
+     * Modifier un don.
      *
      * @param Request $request
-     * @param int $id           L'identifiant de l'instance
+     * @param int $id           L'identifiant du don.
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @Route("/{entity}/{id}", name="update")
+     * @Route("/Don/{id}", name="update")
      * @Method("PUT")
      * @Template("Gesdon2Bundle:Don:edit.html.twig")
      */
@@ -293,10 +292,10 @@ class DonController extends Controller
     }
 
     /**
-     * Supprimer une instance.
+     * Supprimer un don.
      *
      * @param Request $request
-     * @param int $id           l'identifiant de l'instance
+     * @param int $id           l'identifiant du don
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
@@ -327,9 +326,9 @@ class DonController extends Controller
     }
 
     /**
-     * Créer un formulaire pour supprimer une instance.
+     * Créer un formulaire pour supprimer un don.
      *
-     * @param int $id           L'identifiant de l'instance
+     * @param int $id           L'identifiant du don
      *
      * @return \Symfony\Component\Form\Form Le formulaire
      */

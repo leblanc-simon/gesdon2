@@ -4,14 +4,27 @@
 
 <html>
 <head>
-{% stylesheets '@Gesdon2Bundle/Resources/public/css/*' %}
+    {% stylesheets '@Gesdon2Bundle/Resources/public/css/*' %}
     <link rel="stylesheet" href="{{ asset_url }}" type="text/css">
-{% endstylesheets %}
+    {% endstylesheets %}
+    {% stylesheets 'bundles/gesdon2/js/jquery-ui/jquery-ui.min.css' filter='cssrewrite'%}
+    <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+    {% endstylesheets %}
+    {% javascripts '@Gesdon2Bundle/Resources/public/js/jquery-2.1.3.min.js'%}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts '@Gesdon2Bundle/Resources/public/js/jquery-ui/jquery-ui.min.js'%}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 </head>
 <body>
 {% block body -%}
 
+    {{ form_start(list_form) }}
+    {{ form_errors(list_form) }}
     {{ form(list_form) }}
+    {{ form_end(list_form) }}
+    <a href="{{ path('don_new') }}">Ajouter</a>
 
     <div id="don_table">
         {# charger le tableau ici #}

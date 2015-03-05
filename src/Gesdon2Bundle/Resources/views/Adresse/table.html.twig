@@ -34,11 +34,25 @@
 
                 {# afficher les liens vers le formulaire de modification dans la dernière colonne #}
                 <td>
-                    <a href="{{ path('adresse_edit', { 'id': instance.id }) }}"></a>
+                    <a href="{{ path('adresse_edit', { 'id': instance.id }) }}">Modifier</a>
                 </td>
             </tr>
         {% endfor %}
     </table>
+
+    {# Mettre en surbrillance au survol TODO séparer dans un fichier#}
+    <script type="text/javascript">
+        $(document).ready(function( ) {
+            $("table#entities").delegate('tr','mouseover mouseleave',function(e){
+                if (e.type == 'mouseover') {
+                    $(this).addClass("hover");
+                }
+                else {
+                    $(this).removeClass("hover");
+                }
+            })
+        })
+    </script>
 
 {% endblock %}
 </body>
