@@ -1,35 +1,28 @@
 {# src/Gesdon2Bundle/Resources/views/Don/new.html.twig #}
-{# Formulaire de création général #}
 
-
+{% extends '::base.html.twig' %}
 {% form_theme form 'form_table_layout.html.twig' %}
 
-<head>
-    {% stylesheets 'bundles/gesdon2/js/jquery-ui/jquery-ui.min.css' filter='cssrewrite'%}
-        <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
-    {% endstylesheets %}
-    {% javascripts '@Gesdon2Bundle/Resources/public/js/jquery-2.1.3.min.js'%}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    {% javascripts '@Gesdon2Bundle/Resources/public/js/jquery-ui/jquery-ui.min.js'%}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    {% javascripts '@Gesdon2Bundle/Resources/public/js/jquery-ui/datepicker-fr.js'%}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    {% javascripts '@Gesdon2Bundle/Resources/public/js/new.js'%}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+{% block head %}
+    {% block javascripts %}
+        {{ parent() }}
+        {% javascripts
+        'js/jquery-ui/datepicker-fr.js'
+        'js/new.js'%}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+    {% endblock %}
     <title>Créer un don</title>
-</head>
-<body>
-{% block body -%}
+{% endblock %}
+
+{% block body %}
     <h1>Créer un don</h1>
 
     <div>
         {# TODO remplacer par un formulaire ne tenant compte que de l'ID #}
         {# TODO afficher les autres informations sous forme de texte #}
-        Donateur <input type="text" name="donateur" id="donateur">
+        <label for="donateur">Donateur</label>
+        <input type="text" name="donateur" id="donateur">
 
         {{ form_start(form) }}
         {{ form_errors(form) }}
@@ -42,11 +35,5 @@
         Retour à la liste
     </a>
 </div>
-    <div class="content" id="donateur" title="Selectionner un donateur">
-    </div>
-
-    <div class="content" id="adresse" title="Selectionner une adresse">
-    </div>
 
 {% endblock %}
-</body>

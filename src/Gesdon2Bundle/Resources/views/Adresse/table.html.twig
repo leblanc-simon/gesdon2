@@ -1,14 +1,13 @@
 {# src/Gesdon2Bundle/Resources/views/Adresse/table.html.twig #}
 
-<html>
-<head>
-{% stylesheets '@Gesdon2Bundle/Resources/public/css/*' %}
-    <link rel="stylesheet" href="{{ asset_url }}" type="text/css">
-{% endstylesheets %}
-</head>
+{% block head %}
+    {% stylesheets 'css/table.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" type="text/css">
+    {% endstylesheets %}
+{% endblock %}
 
-<body>
-{% block body -%}
+
+{% block body %}
     <table id="entities">
         <tr>
             <th>ID</th>
@@ -40,7 +39,7 @@
         {% endfor %}
     </table>
 
-    {# Mettre en surbrillance au survol TODO séparer dans un fichier#}
+    {# Mettre en surbrillance au survol #}
     <script type="text/javascript">
         $(document).ready(function( ) {
             $("table#entities").delegate('tr','mouseover mouseleave',function(e){
@@ -55,5 +54,3 @@
     </script>
 
 {% endblock %}
-</body>
-</html>

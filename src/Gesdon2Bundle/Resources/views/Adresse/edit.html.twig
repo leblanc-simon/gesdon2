@@ -1,15 +1,16 @@
 {# src/Gesdon2Bundle/Resources/views/Adresse/edit.html.twig #}
 {# Formulaire de modification général #}
 
+{% extends '::base.html.twig' %}
 {% form_theme edit_form 'form_table_layout.html.twig' %}
 {% form_theme delete_form 'form_table_layout.html.twig' %}
 
-<head>
+{% block head %}
     <title>Modifier un adresse</title>
-</head>
+{% endblock %}
 
 
-{% block body -%}
+{% block body %}
     <h1>Modifier adresse</h1>
 
     {{ form(edit_form) }}

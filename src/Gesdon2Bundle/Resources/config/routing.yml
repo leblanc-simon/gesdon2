@@ -1,6 +1,6 @@
 # Menu des entités modifiables.
 index:
-    path:     /index
+    path:     /
     defaults: { _controller: Gesdon2Bundle:Default:index }
 
 

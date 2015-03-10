@@ -1,12 +1,13 @@
 {# src/Gesdon2Bundle/Resources/views/Adresse/new.html.twig #}
 
+{% extends '::base.html.twig' %}
 {% form_theme form 'form_table_layout.html.twig' %}
 
-<head>
+{% block head %}
     <title>Créer une adresse</title>
-</head>
-<body>
-{% block body -%}
+{%  endblock %}
+
+{% block body %}
     <h1>Créer une adresse</h1>
 
     {{ form(form) }}
@@ -17,4 +18,3 @@
     </a>
 </div>
 {% endblock %}
-</body>

@@ -14,7 +14,7 @@ $(document).ready(function()
      */
     var donateur_id;
     $("input#donateur").on( "click", function(){
-        var donateur_dialog = $( "div.content#donateur" )
+        var donateur_dialog = $( "<div title='Choisissez un donateur'></div>" )
             .load('../Donateur')
             .dialog({
                 autoOpen: false,
@@ -33,7 +33,7 @@ $(document).ready(function()
 
     var adresse_id;
     $("#gesdon2_gesdon2bundle_don_adresse").on( "click", function(){
-        var adresse_dialog = $( "div.content#adresse" )
+        var adresse_dialog = $( "<div title='Choisissez une adresse'></div>" )
             .load('../Adresse')
             .dialog({
                 autoOpen: false,
@@ -49,25 +49,5 @@ $(document).ready(function()
                 $("#gesdon2_gesdon2bundle_don_adresse").val(adresse_id);
             });
     });
-    
-
-    // Remplissage du donateur
-/*    $("tr#donateur").click(function (){
-        // replissage du type
-        // filtre par le texte, et pas par la valeur de la liste qui est un entier
-        var type = $(this).find("td.type").html();
-        $("select#gesdon2_gesdon2bundle_don_adresse_donateur_type option").filter(
-            function(){return $(this).text() == type}
-        ).prop('selected', true);
-        $("input#gesdon2_gesdon2bundle_don_adresse_donateur_nom").val(
-            $(this).find("td.nom").html()
-        );
-        $("input#gesdon2_gesdon2bundle_don_adresse_donateur_prenom").val(
-            $(this).find("td.prenom").html()
-        );
-        $("input#gesdon2_gesdon2bundle_don_adresse_donateur_courriel").val(
-            $(this).find("td.courriel").html()
-        );
-    });*/
 
 });
