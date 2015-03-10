@@ -2,12 +2,14 @@
 
 namespace Gesdon2Bundle\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Gesdon2Bundle\Form\SearchDonateurType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Gesdon2Bundle\Entity\Donateur;
+use Gesdon2Bundle\Form\DonateurType;
 
 class DonateurController extends Controller
 {
@@ -19,7 +21,7 @@ class DonateurController extends Controller
      */
     public function searchAction()
     {
-        $form = $this->createFilterForm('Donateur');
+        $form = $this->createSearchForm('Donateur');
         // générer la page à retourner à partir du template twig "list"
         return $this->render('Gesdon2Bundle:Donateur:search.html.twig',
             array(
@@ -34,11 +36,10 @@ class DonateurController extends Controller
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function createFilterForm()
+    private function createSearchForm()
     {
-        // créer l'objet type à partir du nom
-        $type = 'Gesdon2Bundle\\Form\\SearchDonateurType';
-        $typeObject = new $type;
+        // créer l'objet type
+        $typeObject = new SearchDonateurType();
 
         // créer le formulaire
         $form = $this->createForm(
@@ -142,14 +143,11 @@ class DonateurController extends Controller
         // invoquer un Entity Manager pour persister les données
         $em = $this->getDoctrine()->getManager();
 
-        // concaténer le namespace et le nom de la classe
-        $namespaceClasse = 'Gesdon2Bundle\\Entity\\Donateur';
         // créer l'objet
-        $entityObject = new $namespaceClasse;
+        $entityObject = new Donateur();
 
     	// créer l'objet formulaire à partir du type
-        $type = 'Gesdon2Bundle\\Form\\DonateurType';
-        $typeObject = new $type;
+        $typeObject = new DonateurType();
         $form = $this->createForm($typeObject, $entityObject);
 
         // ajouter le bouton d'envoi
@@ -224,9 +222,8 @@ class DonateurController extends Controller
      */
     private function createEditForm($instance, $id)
     {
-        // créer l'objet type à partir du nom
-        $type = 'Gesdon2Bundle\\Form\\DonateurType';
-        $typeObject = new $type;
+        // créer l'objet type
+        $typeObject = new DonateurType();
 
         // créer le formulaire
         $form = $this->createForm(

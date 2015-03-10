@@ -51,6 +51,8 @@ class SearchDonType extends AbstractType
     {
         $resolver->setDefaults(array(
             //'data_class' => 'Gesdon2Bundle\Entity\Don'
+            'attr' => array('id' => 'don_form'),
+            'csrf_protection' => false,
         ));
     }
 

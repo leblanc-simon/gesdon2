@@ -2,7 +2,9 @@
 
 namespace Gesdon2Bundle\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Gesdon2Bundle\Entity\Adresse;
+use Gesdon2Bundle\Form\AdresseType;
+use Gesdon2Bundle\Form\SearchAdresseType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,7 +21,7 @@ class AdresseController extends Controller
      */
     public function searchAction()
     {
-        $form = $this->createFilterForm('Adresse');
+        $form = $this->createSearchForm('Adresse');
 
         // générer la page à retourner à partir du template twig "list"
         return $this->render('Gesdon2Bundle:Adresse:search.html.twig',
@@ -33,15 +35,12 @@ class AdresseController extends Controller
     /**
      * Créer un formulaire pour rechercher des adresses.
      *
-     * @param string $entity    Le nom de l'entité
-     *
      * @return \Symfony\Component\Form\Form
      */
-    private function createFilterForm($entity)
+    private function createSearchForm()
     {
-        // créer l'objet type à partir du nom
-        $type = 'Gesdon2Bundle\\Form\\Search' . $entity . "Type";
-        $typeObject = new $type;
+        // créer l'objet type
+        $typeObject = new SearchAdresseType();
 
         // créer le formulaire
         $form = $this->createForm(
@@ -146,14 +145,11 @@ class AdresseController extends Controller
         // invoquer un Entity Manager pour persister les données
         $em = $this->getDoctrine()->getManager();
 
-        // concaténer le namespace et le nom de la classe
-        $namespaceClasse = 'Gesdon2Bundle\\Entity\\Adresse';
         // créer l'objet
-        $entityObject = new $namespaceClasse;
+        $entityObject = new Adresse();
 
-    	// créer l'objet formulaire à partir du type
-        $type = 'Gesdon2Bundle\\Form\\AdresseType';
-        $typeObject = new $type;
+    	// créer l'objet formulaire
+        $typeObject = new AdresseType();
         $form = $this->createForm($typeObject, $entityObject);
 
         // ajouter le bouton d'envoi
@@ -228,9 +224,8 @@ class AdresseController extends Controller
      */
     private function createEditForm($instance, $id)
     {
-        // créer l'objet type à partir du nom
-        $type = 'Gesdon2Bundle\\Form\\AdresseType';
-        $typeObject = new $type;
+        // créer l'objet type
+        $typeObject = new AdresseType();
 
         // créer le formulaire
         $form = $this->createForm(

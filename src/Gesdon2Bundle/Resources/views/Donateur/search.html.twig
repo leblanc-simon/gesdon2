@@ -4,11 +4,11 @@
 {% form_theme list_form 'form_table_layout.html.twig' %}
 
 {% block head %}
+
     {% block javascripts %}
         {{ parent() }}
         <script type="text/javascript">
             $(document).ready(function( ) {
-                //au click sur le bouton 'filtrer'
                 $("#donateur_search").click(function( event ){
                     // empêcher le submit
                     event.preventDefault();
@@ -27,10 +27,9 @@
                             //mettre à jour le div avec les données reçues
                             //vider la div et on le cache
                             $("#donateur_table")
-                                    .empty().hide()
-                                //affecter les resultats au div
+                                    .empty()
+                                    .hide()
                                     .append(htmlResponse)
-                                //afficher les resultats avec la transition
                                     .fadeIn(100);
                         }
                     });
@@ -38,12 +37,14 @@
             })
         </script>
     {% endblock %}
+
     {% block stylesheets %}
         {{ parent() }}
         {% stylesheets 'css/table.css' %}
         <link rel="stylesheet" href="{{ asset_url }}" type="text/css">
         {% endstylesheets %}
     {% endblock %}
+
 {% endblock %}
 
 {% block body %}

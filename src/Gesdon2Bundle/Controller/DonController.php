@@ -2,8 +2,9 @@
 
 namespace Gesdon2Bundle\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Proxies\__CG__\Gesdon2Bundle\Entity\Donateur;
+use Gesdon2Bundle\Entity\Don;
+use Gesdon2Bundle\Form\DonType;
+use Gesdon2Bundle\Form\SearchDonType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -20,7 +21,7 @@ class DonController extends Controller
      */
     public function searchAction()
     {
-        $form = $this->createFilterForm('Don');
+        $form = $this->createSearchForm('Don');
 
         // générer la page à retourner à partir du template twig "search"
         return $this->render('Gesdon2Bundle:Don:search.html.twig',
@@ -35,11 +36,10 @@ class DonController extends Controller
      *
      * @return \Symfony\Component\Form\Form
      */
-    private function createFilterForm()
+    private function createSearchForm()
     {
-        // créer l'objet type à partir du nom
-        $type = 'Gesdon2Bundle\\Form\\SearchDonType';
-        $typeObject = new $type;
+        // créer l'objet type
+        $typeObject = new SearchDonType();
 
         // créer le formulaire
         $form = $this->createForm(
@@ -47,9 +47,7 @@ class DonController extends Controller
             //pas de données initiales
             null,
             array(
-                'action' => $this->generateUrl(
-                    'don_search'
-                ),
+                'action' => $this->generateUrl('don_search'),
                 'method' => 'POST',
             )
         );
@@ -145,14 +143,11 @@ class DonController extends Controller
         // invoquer un Entity Manager pour persister les données
         $em = $this->getDoctrine()->getManager();
 
-        // concaténer le namespace et le nom de la classe
-        $namespaceClasse = 'Gesdon2Bundle\\Entity\\Don';
         // créer l'objet
-        $instance = new $namespaceClasse;
+        $instance = new Don();
 
-    	// créer l'objet formulaire à partir du type
-        $type = 'Gesdon2Bundle\\Form\\DonType';
-        $typeObject = new $type;
+    	// créer l'objet formulaire
+        $typeObject = new DonType();
         $form = $this->createForm($typeObject, $instance);
 
         // ajouter le bouton d'envoi
@@ -227,9 +222,7 @@ class DonController extends Controller
      */
     private function createEditForm($instance, $id)
     {
-        // créer l'objet type à partir du nom
-        $type = 'Gesdon2Bundle\\Form\\DonType';
-        $typeObject = new $type;
+        $typeObject = new DonType();
 
         // créer le formulaire
         $form = $this->createForm(
