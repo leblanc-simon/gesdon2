@@ -112,7 +112,8 @@ class DonController extends Controller
                 }
             }
             // si des champs du filtre ont été renseignés, définir la clause where
-            if (!empty($andX->getParts())) {
+            $andParts = $andX->getParts();
+            if (!empty($andParts)) {
                 $qb->where($andX);
             }
         }
