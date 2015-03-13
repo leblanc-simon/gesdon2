@@ -9,3 +9,12 @@ services:
         class: Gesdon2Bundle\Twig\ToArrayExtension
         tags:
             - { name: twig.extension }
+
+
+# type de champ personnalisé AdresseSelector
+    gesdon2.type.adresse_selector:
+        class: Gesdon2Bundle\Form\AdresseSelectorType
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: form.type, alias: adresse_selector }
+# l'alias doit corresponde au nom renvoyé par la méthode getName() de la classe

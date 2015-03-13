@@ -55,7 +55,10 @@ class AdresseController extends Controller
             )
         );
 
-        $form->add('adresse_search', 'submit', array('label' => 'Rechercher'));
+        $form->add('adresse_search', 'submit', array(
+            'label' => 'Rechercher',
+            'disabled' => 'true',
+        ));
 
         return $form;
     }

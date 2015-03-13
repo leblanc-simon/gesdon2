@@ -29,9 +29,10 @@ class AdresseType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Gesdon2Bundle\Entity\Adresse'
-        ));
+        $resolver
+            ->setDefaults(array(
+                'data_class' => 'Gesdon2Bundle\Entity\Adresse'
+            ));
     }
 
     /**

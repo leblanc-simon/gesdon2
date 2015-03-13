@@ -15,9 +15,8 @@ class DonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('adresse', 'entity', array(
-                'class' => 'Gesdon2Bundle:Adresse'
-            ) )
+            // ajouter un champ texte où indiquer l'ID
+            ->add('adresse','adresse_selector')
             ->add('date', 'date', array(
                 'widget'=> 'single_text',
                 'input' => 'datetime',
@@ -34,6 +33,7 @@ class DonType extends AbstractType
                 'input' => 'datetime',
                 'format'=> 'dd/MM/yyyy',
                 'attr'  => array('class' => 'date'),
+                'required' => false,
             ))
             ->add('courriel')
         ;
@@ -44,9 +44,10 @@ class DonType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver
+            ->setDefaults(array(
             'data_class' => 'Gesdon2Bundle\Entity\Don'
-        ));
+            ));
     }
 
     /**

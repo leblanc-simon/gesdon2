@@ -6,10 +6,11 @@
 {% block head %}
     {% block javascripts %}
         {{ parent() }}
-        {% javascripts
-        'js/jquery-ui/datepicker-fr.js'
-        'js/new.js'%}
-            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% javascripts 'js/jquery-ui/datepicker-fr.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        {% javascripts 'js/new.js'%}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
     {% endblock %}
     <title>Créer un don</title>

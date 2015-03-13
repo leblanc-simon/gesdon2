@@ -52,7 +52,10 @@ class DonController extends Controller
             )
         );
 
-        $form->add('don_search', 'submit', array('label' => 'Rechercher'));
+        $form->add('don_search', 'submit', array(
+            'label' => 'Rechercher',
+            'disabled' => 'true',
+        ));
 
         return $form;
     }
@@ -83,7 +86,7 @@ class DonController extends Controller
                 if (is_array($value)) {
                     // un champ de formulaire de type 'choice' renvoit une sélection multiple sous forme de tableau
                     // transformer le tableau en chaînes séparées par des virgules
-                    //$elements = $value->toArray();
+                    $elements = $value->toArray();
                     // si le tableau n'est pas vide...
                     if (!empty($elements)) {
                         /** @var string $ids Chaîne des Id */
@@ -236,8 +239,7 @@ class DonController extends Controller
                         'id' => $id
                     )
                 ),
-                'method' => 'PUT',
-            )
+                'method' => 'PUT',)
         );
 
         $form->add('submit', 'submit', array('label' => 'Modifier'));

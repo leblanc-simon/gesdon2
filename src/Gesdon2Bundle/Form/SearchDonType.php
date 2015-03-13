@@ -27,20 +27,13 @@ class SearchDonType extends AbstractType
                     'multiple' => true,
                 )
             )
-            ->add('moyenDesc',      'text',     array('required' => false))
-            ->add('recurrence',     'checkbox', array('required' => false))
-            ->add('transacNum',     'text',     array('required' => false))
+            ->add('moyenDesc', 'text', array('required' => false))
+            ->add('recurrence', 'checkbox', array('required' => false))
+            ->add('transacNum', 'text', array('required' => false))
             // TODO trouver un moyen de filtrer par période
-            ->add('dateFinRecurrence',  'date',     array('required' => false))
-            ->add('courriel',       'text',     array('required' => false))
-            ->add('adresse','entity',
-                array
-                (
-                    'class' => 'Gesdon2Bundle:Adresse',
-                    'required' => false,
-                    'multiple' => true,
-                )
-            )
+            ->add('dateFinRecurrence', 'date', array('required' => false))
+            ->add('courriel', 'text', array('required' => false))
+            ->add('adresse', 'adresse_selector')
         ;
     }
     
