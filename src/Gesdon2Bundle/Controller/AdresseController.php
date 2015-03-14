@@ -4,7 +4,7 @@ namespace Gesdon2Bundle\Controller;
 
 use Gesdon2Bundle\Entity\Adresse;
 use Gesdon2Bundle\Form\AdresseType;
-use Gesdon2Bundle\Form\SearchAdresseType;
+use Gesdon2Bundle\Form\AdresseSearchType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -26,8 +26,7 @@ class AdresseController extends Controller
         // générer la page à retourner à partir du template twig "list"
         return $this->render('Gesdon2Bundle:Adresse:search.html.twig',
             array(
-                'list_form' => $form->createView(), // créer la vue à partir du formulaire
-                'entity'  => 'Adresse'
+                'adresse_form' => $form->createView(), // créer la vue à partir du formulaire
             )
         );
     }
@@ -40,7 +39,7 @@ class AdresseController extends Controller
     private function createSearchForm()
     {
         // créer l'objet type
-        $typeObject = new SearchAdresseType();
+        $typeObject = new AdresseSearchType();
 
         // créer le formulaire
         $form = $this->createForm(
@@ -48,16 +47,14 @@ class AdresseController extends Controller
             //pas de données initiales
             null,
             array(
-                'action' => $this->generateUrl(
-                    'adresse_search'
-                ),
+                'action' => $this->generateUrl('adresse_table'),
                 'method' => 'POST',
             )
         );
 
         $form->add('adresse_search', 'submit', array(
             'label' => 'Rechercher',
-            'disabled' => 'true',
+            //'disabled' => 'true',
         ));
 
         return $form;
@@ -66,60 +63,66 @@ class AdresseController extends Controller
     /**
      * Créer le tableau HTML des adresses
      *
+     * @Route("/Adresse/table", name="adresse_table")
+     * @Method({"POST"})
+     * @Template( "Gesdon2Bundle:Adresse:table.html.twig" )
+     *
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableAction(){
+    public function tableAction(Request $request)
+    {
+        // invoquer le manager Doctrine
         $em = $this->getDoctrine()->getManager();
-
-        // retrouver la table
-        $repository = $em->getRepository('Gesdon2Bundle:Adresse');
-        // créer un constructeur de requêtes sur la table
-        $qb = $repository->createQueryBuilder('Adresse');
+        // créer un constructeur de requêtes DQL
+        $qb = $em->createQueryBuilder();
+        // sélectionner dans la table Adresse
+        $qb ->select('a')
+            ->from('Gesdon2Bundle:Adresse', 'a');
 
         // retrouver les données du formulaire
-        $filter = $_POST;
-        if (!empty($filter)) {
-            // créer une expression AND
-            $andX = $qb->expr()->andX();
-            // pour chaque champ du filtre et sa valeur
-            foreach ($filter as $column => $value) {
-                // La fonction IDENTITY permet de filtrer sur la colonne correspondant à la clef étrangère, sans avoir à faire la jointure
-                // Sans cette fonction, Doctirne renvoit l'erreur "Invalid PathExpression. Must be a StateFieldPathExpression"
-                if (is_array($value)) {
-                    // un champ de formulaire de type 'choice' renvoit une sélection multiple sous forme de tableau
-                    // transformer le tableau en chaînes séparées par des virgules
-                    //$elements = $value->toArray();
-                    // si le tableau n'est pas vide...
-                    if (!empty($elements)) {
-                        /** @var string $ids Chaîne des Id */
-                        $ids = '';
-                        $i = 0;
-                        $len = count($elements);
-                        // pour chaque objet du tableau
-                        foreach ($elements as $object) {
-                            // ajouter l'Id à la chaîne
-                            $ids = $ids . $object->getId();
-                            if ($i != $len - 1) {
-                                $ids = $ids . ',';
-                            }
-                            $i++;
+        $form = $this->createForm(new AdresseSearchType());
+        $form->submit($request);
+
+        // si le formulaire est validé...
+        if ($form->isValid()){
+            // retrouver les données
+            $filter = $form->getData();
+            // pour debug
+            dump($filter);
+            if (!empty($filter)) {
+                // créer une expression AND
+                $andX = $qb->expr()->andX();
+                // pour chaque champ du filtre et sa valeur
+                foreach ($filter as $column => $value) {
+                    // si le champ est un tableau
+                    // (donc, dans le cas du formulaire, un tableau d'objets entité)
+                    if (is_array($value)) {
+                        // si le tableau n'est pas vide...
+                        if (!empty($value)) {
+                            // ajouter une clause IN
+                            // où la valeur de la colonne est dans le tableau d'IDs
+                            $andX->add("a.{$column} IN(:ids)");
+                            // affecter la liste d'IDs du tableau au paramètre
+                            $qb->setParameter('ids',array_values($value));
                         }
-                        // passer la chaîne des Id dans la clause
-                        $andX->add("IDENTITY(Adresse.{$column}) IN ({$ids})");
                     }
-                } else {
-                    // si le champ n'est pas vide
-                    if ($value != '') {
-                        $andX->add($qb->expr()->like(
-                            "Adresse.{$column}",
-                            "'{$value}'"));
+                    // si le champ n'est pas un tableau
+                    else {
+                        // si le champ n'est pas vide
+                        if ($value != '') {
+                            // ajouter une clause LIKE, traiter comme du texte
+                            $andX->add($qb->expr()->like(
+                                "a.{$column}",
+                                "'{$value}'"));
+                        }
                     }
                 }
-            }
-            // si des champs du filtre ont été renseignés, définir la clause where
-            $andParts = $andX->getParts();
-            if (!empty($andParts)) {
-                $qb->where($andX);
+                // si des champs du filtre ont été renseignés, définir la clause where
+                $andParts = $andX->getParts();
+                if (!empty($andParts)) {
+                    $qb->where($andX);
+                }
             }
         }
         // exécuter la requête et retrouver le résultat

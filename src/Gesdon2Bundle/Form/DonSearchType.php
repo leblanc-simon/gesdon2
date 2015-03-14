@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class SearchDonType extends AbstractType
+class DonSearchType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -25,15 +25,16 @@ class SearchDonType extends AbstractType
                     'property' => 'nom',
                     'required' => false,
                     'multiple' => true,
+                    'expanded' => true,
                 )
             )
-            ->add('moyenDesc', 'text', array('required' => false))
-            ->add('recurrence', 'checkbox', array('required' => false))
-            ->add('transacNum', 'text', array('required' => false))
+            ->add('moyenDesc',          'text',             array('required' => false))
+            ->add('recurrence',         'checkbox',         array('required' => false))
+            ->add('transacNum',         'text',             array('required' => false))
             // TODO trouver un moyen de filtrer par période
-            ->add('dateFinRecurrence', 'date', array('required' => false))
-            ->add('courriel', 'text', array('required' => false))
-            ->add('adresse', 'adresse_selector')
+            ->add('dateFinRecurrence',  'date',             array('required' => false))
+            ->add('courriel',           'text',             array('required' => false))
+            ->add('adresse',            'adresse_selector', array('required' => false))
         ;
     }
     

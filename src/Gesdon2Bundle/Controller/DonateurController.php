@@ -2,7 +2,8 @@
 
 namespace Gesdon2Bundle\Controller;
 
-use Gesdon2Bundle\Form\SearchDonateurType;
+use Doctrine\Common\Collections\ArrayCollection;
+use Gesdon2Bundle\Form\DonateurSearchType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -15,7 +16,7 @@ class DonateurController extends Controller
 {
 
     /**
-     * Afficher la liste des instances de l'entité passée en paramètre.
+     * Afficher la liste des donateurs.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -25,8 +26,7 @@ class DonateurController extends Controller
         // générer la page à retourner à partir du template twig "list"
         return $this->render('Gesdon2Bundle:Donateur:search.html.twig',
             array(
-                'list_form' => $form->createView(), // créer la vue à partir du formulaire
-                'entity'  => 'Donateur'
+                'donateur_form' => $form->createView(), // créer la vue à partir du formulaire
             )
         );
     }
@@ -39,7 +39,7 @@ class DonateurController extends Controller
     private function createSearchForm()
     {
         // créer l'objet type
-        $typeObject = new SearchDonateurType();
+        $typeObject = new DonateurSearchType();
 
         // créer le formulaire
         $form = $this->createForm(
@@ -47,14 +47,14 @@ class DonateurController extends Controller
             //pas de données initiales
             null,
             array(
-                'action' => $this->generateUrl('donateur_search'),
+                'action' => $this->generateUrl('donateur_table'),
                 'method' => 'POST'
             )
         );
 
         $form->add('donateur_search', 'submit', array(
             'label' => 'Rechercher',
-            'disabled' => 'true',
+            //'disabled' => 'true',
         ));
 
         return $form;
@@ -63,51 +63,58 @@ class DonateurController extends Controller
     /**
      * Créer le tableau HTML des donateurs
      *
+     * @Route("/Adresse/table", name="adresse_table")
+     * @Method({"POST"})
+     * @Template( "Gesdon2Bundle:Adresse:table.html.twig" )
+     *
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableAction(){
+    public function tableAction(Request $request)
+    {
+        // invoquer le manager Doctrine
         $em = $this->getDoctrine()->getManager();
-
-        // retrouver la table
-        $repository = $em->getRepository('Gesdon2Bundle:Donateur');
-        // créer un constructeur de requêtes sur la table
-        $qb = $repository->createQueryBuilder('Donateur');
+        // créer un constructeur de requêtes DQL
+        $qb = $em->createQueryBuilder();
+        // sélectionner dans la table Donateur
+        $qb ->select('d')
+            ->from('Gesdon2Bundle:Donateur', 'd');
 
         // retrouver les données du formulaire
-        $filter = $_POST;
+        $form = $this->createForm(new DonateurSearchType());
+        $form->submit($request);
+
+
+        // si le formulaire est validé...
+        if ($form->isValid()) {
+            // retrouver les données
+            $filter = $form->getData();
+            // pour debug
+            dump($filter);
             if (!empty($filter)) {
                 // créer une expression AND
                 $andX = $qb->expr()->andX();
                 // pour chaque champ du filtre et sa valeur
                 foreach ($filter as $column => $value) {
-                    // La fonction IDENTITY permet de filtrer sur la colonne correspondant à la clef étrangère, sans avoir à faire la jointure
-                    // Sans cette fonction, Doctirne renvoit l'erreur "Invalid PathExpression. Must be a StateFieldPathExpression"
-                    // TODO gérer les Types! l'erreur Invalid PathExpression remet ça!
-                    if (is_array($value)) {
-                        // un champ de formulaire de type 'choice' renvoit une sélection multiple sous forme de tableau
-                        // si le tableau n'est pas vide...
-                        if (!empty($elements)) {
-                            /** @var string $ids Chaîne des Id */
-                            $ids = '';
-                            $i = 0;
-                            $len = count($elements);
-                            // pour chaque objet du tableau
-                            foreach ($elements as $object) {
-                                // ajouter l'Id à la chaîne
-                                $ids = $ids . $object->getId();
-                                if ($i != $len - 1) {
-                                    $ids = $ids . ',';
-                                }
-                                $i++;
+                    // si le champ est une ArrayCollection
+                    // (dans le cas d'un champ 'entity')
+                    if ($value instanceof ArrayCollection) {
+                        // si la collection n'est pas vide...
+                        if ($value->count() != 0) {
+                                // ajouter une clause IN
+                                // où la valeur de la colonne est dans le tableau d'IDs
+                                $andX->add("d.{$column} IN(:ids)");
+                                // affecter la liste d'IDs du tableau au paramètre
+                                $qb->setParameter('ids', $value->getValues());
                             }
-                            // passer la chaîne des Id dans la clause
-                            $andX->add("IDENTITY(Donateur.{$column}) IN ({$ids})");
-                        }
-                    } else {
+                    }
+                    // sinon
+                    else {
                         // si le champ n'est pas vide
                         if ($value != '') {
+                            // ajouter une clause LIKE, traiter comme du texte
                             $andX->add($qb->expr()->like(
-                                "Donateur.{$column}",
+                                "d.{$column}",
                                 "'{$value}'"));
                         }
                     }
@@ -118,14 +125,15 @@ class DonateurController extends Controller
                     $qb->where($andX);
                 }
             }
-            // exécuter la requête et retrouver le résultat
-            $instances = $qb->getQuery()->getResult();
+        }
+        // exécuter la requête et retrouver le résultat
+        $instances = $qb->getQuery()->getResult();
 
         // générer la page à retourner à partir du template twig "table"
         // en passant la liste des donateurs
         return $this->render('Gesdon2Bundle:Donateur:table.html.twig',
             array(
-                'instances'=> $instances
+                'instances' => $instances
             )
         );
     }

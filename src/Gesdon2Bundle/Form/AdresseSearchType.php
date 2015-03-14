@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class SearchAdresseType extends AbstractType
+class AdresseSearchType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -15,17 +15,7 @@ class SearchAdresseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            // TODO formulaire imbriqué ou popup
-
-            ->add(
-            'donateur','entity',array(
-                'class' => 'Gesdon2Bundle:Donateur',
-                'property' => 'nom',
-                'required' => false,
-                'multiple' => true,
-                )
-            )
-
+            ->add('donateur','donateur_selector', array('required' => false))
             ->add('adresse1',   'text', array('required' => false))
             ->add('adresse2',   'text', array('required' => false))
             ->add('codePostal', 'text', array('required' => false))

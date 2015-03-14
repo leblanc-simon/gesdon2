@@ -18,3 +18,9 @@ services:
         tags:
             - { name: form.type, alias: adresse_selector }
 # l'alias doit corresponde au nom renvoyé par la méthode getName() de la classe
+# type de champ personnalisé DonateurSelector
+    gesdon2.type.donateur_selector:
+        class: Gesdon2Bundle\Form\DonateurSelectorType
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: form.type, alias: donateur_selector }

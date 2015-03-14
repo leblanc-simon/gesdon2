@@ -1,44 +1,82 @@
 {# src/Gesdon2Bundle/Resources/views/Don/search.html.twig #}
 
 {% extends '::base.html.twig' %}
-{% form_theme list_form 'form_table_layout.html.twig' %}
+{% form_theme don_form 'form_table_layout.html.twig' %}
 
 {% block head %}
 
     {% block javascripts %}
         {{ parent() }}
 
-        <script type="text/javascript">
+        <script type="text/javascript" >
+            function donPost( $form, callback ){
+                // Retrouver les valeurs du formulaire
+                var values = {};
+                $.each( $form.serializeArray(), function(i, field) {
+                    values[field.name] = field.value;
+                });
+                // Envoyer les valeurs au contrôleur
+                $.ajax({
+                    type        : $form.attr( 'method' ),
+                    url         : $form.attr( 'action' ),
+                    data        : values,
+                    success     : function(data) {
+                        callback( data );
+                        //vider la div et mettre à jour la div avec les données reçues
+                        $("#don_table")
+                                .empty()
+                                .hide()
+                                .append(data)
+                                .fadeIn(100);
+                    }
+                });
+            }
+
             $(document).ready(function( ) {
-                $("#don_search")
-                    .click(function( event ){
-                        // empêcher le submit
-                        event.preventDefault();
-                        // récupérer le formulaire (le nom du formulaire est défini dans le Type)
-                        var form = $('#don_form');
-                        //requête ajax, appel de la route don_table
-                        $.ajax({
-                            type    : 'POST',
-                            url     : "{{ path('don_table') }}",
-                            data    : form.serialize(),
-                            //afficher l'erreur en cas de problème
-                            error:function(msg, string){
-                                alert( "Error !: " + string );
-                            },
-                            success:function(htmlResponse){
-                                //mettre à jour le div avec les données reçues
-                                //vider la div et on le cache
-                                $("#don_table")
-                                        .empty()
-                                        .hide()
-                                        .append(htmlResponse)
-                                        .fadeIn(100);
-                            }
-                        });
-                    })
-                    /*activer le bouton une fois que l'action est affectée*/
-                    .removeAttr('disabled');
-            })
+                var forms = [
+                    '[ name="{{ don_form.vars.full_name }}"]'
+                ];
+
+                $(forms.join(',')).submit(function (e) {
+                    e.preventDefault();
+                    donPost($(this), function callback(response) {
+                    });
+
+                    return false;
+                });
+
+                /**
+                 * Sur click du champ Donateur,
+                 * ouvrir une fenêtre modale contenant la liste des adresses
+                 */
+                $("#adresse").on( "click", function(){
+                    var adresse_id;
+                    var adresse_dialog;
+                    // si la fenêtre n'a pas été initialisée...
+                    if (typeof adresse_dialog === "undefined") {
+                        // créer une fenêtre à partir d'une nouvelle div
+                        adresse_dialog = $("<div title='Choisissez une adresse'></div>")
+                                .load('{{ path('adresse_search') }}')
+                                .dialog({
+                                    autoOpen: false,
+                                    height: 800,
+                                    width: 800,
+                                    modal: true
+                                });
+                        adresse_dialog
+                                .dialog("open")
+                                .on('click', '#adresse', function () {
+                                    adresse_id = $(this).find(".id").text();
+                                    adresse_dialog.dialog("close");
+                                    $("#adresse").val(adresse_id);
+                                });
+                    }
+                    // si la fenêtre existe déjà, l'ouvrir
+                    else{
+                        adresse_dialog.dialog( "open" );
+                    }
+                });
+            });
         </script>
 
     {% endblock %}
@@ -54,10 +92,10 @@
 
 {% block body %}
 
-    {{ form_start(list_form) }}
-    {{ form_errors(list_form) }}
-    {{ form(list_form) }}
-    {{ form_end(list_form) }}
+    {{ form_start(don_form) }}
+    {{ form_errors(don_form) }}
+    {{ form(don_form) }}
+    {{ form_end(don_form) }}
     <a href="{{ path('don_new') }}">Ajouter</a>
 
     <div id="don_table">

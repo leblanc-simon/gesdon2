@@ -24,15 +24,14 @@ class AdresseVersId implements DataTransformerInterface
 
     /**
      * Transforme un objet Adresse en entier Id.
-     * Renvoie -1 si l'adresse n'est pas trouvée.
      *
      * @param  Adresse|null $adresse
-     * @return int
+     * @return int|null
      */
     public function transform($adresse)
     {
         if (null === $adresse) {
-            return -1;
+            return null;
         }
 
         return $adresse->getId();

@@ -2,9 +2,11 @@
 
 namespace Gesdon2Bundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Gesdon2Bundle\Entity\Adresse;
 use Gesdon2Bundle\Entity\Don;
 use Gesdon2Bundle\Form\DonType;
-use Gesdon2Bundle\Form\SearchDonType;
+use Gesdon2Bundle\Form\DonSearchType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -26,7 +28,7 @@ class DonController extends Controller
         // générer la page à retourner à partir du template twig "search"
         return $this->render('Gesdon2Bundle:Don:search.html.twig',
             array(
-                'list_form' => $form->createView(), // créer la vue à partir du formulaire
+                'don_form' => $form->createView(), // créer la vue à partir du formulaire
             )
         );
     }
@@ -39,7 +41,7 @@ class DonController extends Controller
     private function createSearchForm()
     {
         // créer l'objet type
-        $typeObject = new SearchDonType();
+        $typeObject = new DonSearchType();
 
         // créer le formulaire
         $form = $this->createForm(
@@ -47,77 +49,90 @@ class DonController extends Controller
             //pas de données initiales
             null,
             array(
-                'action' => $this->generateUrl('don_search'),
+                'action' => $this->generateUrl('don_table'),
                 'method' => 'POST',
             )
         );
 
         $form->add('don_search', 'submit', array(
             'label' => 'Rechercher',
-            'disabled' => 'true',
+            //'disabled' => 'true',
         ));
 
         return $form;
     }
 
     /**
-     * Créer le tableau HTML des dons
+     * Créer le tableau HTML des dons.
      *
+     * @Route("/Don/table", name="don_table")
+     * @Method({"POST"})
+     * @Template( "Gesdon2Bundle:Don:table.html.twig" )
+     *
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableAction(){
+    public function tableAction(Request $request){
+        // invoquer le manager Doctrine
         $em = $this->getDoctrine()->getManager();
+        // créer un constructeur de requêtes DQL
+        $qb = $em->createQueryBuilder();
+        // sélectionner dans la table Adresse
+        $qb ->select('d')
+            ->from('Gesdon2Bundle:Don', 'd');
 
-        // retrouver la table
-        $repository = $em->getRepository('Gesdon2Bundle:Don');
-        // créer un constructeur de requêtes sur la table
-        $qb = $repository->createQueryBuilder('Don');
 
         // retrouver les données du formulaire
-        $filter = $_POST;
-        if (!empty($filter)) {
-            // créer une expression AND
-            $andX = $qb->expr()->andX();
-            // pour chaque champ du filtre et sa valeur
-            foreach ($filter as $column => $value) {
-                // La fonction IDENTITY permet de filtrer sur la colonne correspondant à la clef étrangère, sans avoir à faire la jointure
-                // Sans cette fonction, Doctirne renvoit l'erreur "Invalid PathExpression. Must be a StateFieldPathExpression"
-                // TODO gérer les Types! l'erreur Invalid PathExpression remet ça!
-                if (is_array($value)) {
-                    // un champ de formulaire de type 'choice' renvoit une sélection multiple sous forme de tableau
-                    // transformer le tableau en chaînes séparées par des virgules
-                    $elements = $value->toArray();
-                    // si le tableau n'est pas vide...
-                    if (!empty($elements)) {
-                        /** @var string $ids Chaîne des Id */
-                        $ids = '';
-                        $i = 0;
-                        $len = count($elements);
-                        // pour chaque objet du tableau
-                        foreach ($elements as $object) {
-                            // ajouter l'Id à la chaîne
-                            $ids = $ids . $object->getId();
-                            if ($i != $len - 1) {
-                                $ids = $ids . ',';
-                            }
-                            $i++;
+        $form = $this->createForm(new DonSearchType());
+        $form->submit($request);
+
+        // si le formulaire est validé...
+        if ($form->isValid()){
+            // retrouver les données
+            $filter = $form->getData();
+            // pour debug
+            dump($filter);
+            if (!empty($filter)) {
+                // créer une expression AND
+                $andX = $qb->expr()->andX();
+                // pour chaque champ du filtre et sa valeur
+                foreach ($filter as $column => $value) {
+                    // si le champ est un tableau
+                    // (donc, dans le cas du formulaire, un tableau d'objets entité)
+                    if ($value instanceof ArrayCollection) {
+                        // si la collection n'est pas vide...
+                        if ($value->count() != 0) {
+                            // ajouter une clause IN
+                            // où la valeur de la colonne est dans le tableau d'IDs
+                            $andX->add("d.{$column} IN(:ids)");
+                            // affecter la liste d'IDs du tableau au paramètre
+                            $qb->setParameter('ids', $value->getValues());
                         }
-                        // passer la chaîne des Id dans la clause
-                        $andX->add("IDENTITY(Don.{$column}) IN ({$ids})");
                     }
-                } else {
-                    // si le champ n'est pas vide
-                    if ($value != '') {
-                        $andX->add($qb->expr()->like(
-                            "Don.{$column}",
-                            "'{$value}'"));
+                    // si le champ est une Adresse
+                    elseif($value instanceof Adresse){
+                        // ajouter une clause IN
+                        // où la valeur de la colonne est dans le tableau d'IDs
+                        $andX->add("d.{$column} =(:adresseId)");
+                        // affecter la liste d'IDs du tableau au paramètre
+                        $qb->setParameter('adresseId', $value->getId());
+                    }
+                    // sinon
+                    else {
+                        // si le champ n'est pas vide
+                        if ($value != '') {
+                            // ajouter une clause LIKE, traiter comme du texte
+                            $andX->add($qb->expr()->like(
+                                "d.{$column}",
+                                "'{$value}'"));
+                        }
                     }
                 }
-            }
-            // si des champs du filtre ont été renseignés, définir la clause where
-            $andParts = $andX->getParts();
-            if (!empty($andParts)) {
-                $qb->where($andX);
+                // si des champs du filtre ont été renseignés, définir la clause where
+                $andParts = $andX->getParts();
+                if (!empty($andParts)) {
+                    $qb->where($andX);
+                }
             }
         }
         // exécuter la requête et retrouver le résultat

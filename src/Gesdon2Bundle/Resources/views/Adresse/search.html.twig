@@ -1,76 +1,98 @@
 {# src/Gesdon2Bundle/Resources/views/Adresse/search.html.twig #}
 
 {% extends '::base.html.twig' %}
-{% form_theme list_form 'form_table_layout.html.twig' %}
+{% form_theme adresse_form 'form_table_layout.html.twig' %}
 
 {% block head %}
+
     {% block javascripts %}
         {{ parent() }}
-        <script type="text/javascript">
-            $(document).ready(function( ) {
-                //au click sur le bouton 'filtrer'
-                $("#adresse_search")
-                    .click(function( event ){
-                        // empêcher le submit
-                        event.preventDefault();
-                        // récupérer le formulaire (le nom du formulaire est défini dans le Type)
-                        var form = $('#adresse_form');
-                        //requête ajax, appel de la route adresse_table
-                        $.ajax({
-                            type    : 'POST',
-                            url     : "{{ path('adresse_table') }}",
-                            data    : form.serialize(),
-                            //afficher l'erreur en cas de problème
-                            error:function(msg, string){
-                                alert( "Error !: " + string );
-                            },
-                            success:function(htmlResponse){
-                                //vider la div et mettre à jour la div avec les données reçues
-                                $("#adresse_table")
-                                        .empty()
-                                        .hide()
-                                        .append(htmlResponse)
-                                        .fadeIn(100);
-                            }
-                        });
-                    })
-                    /*activer le bouton une fois que l'action est affectée*/
-                    .removeAttr('disabled');
-
-                // Ouvrir une fenêtre modale contenant la liste des donateurs
-                var donateur_id;
-                $("option").on( "click", function(){
-                    var donateur_dialog = $( "<div title='Choisissez un donateur'></div>" )
-                            .load('../Donateur')
-                            .dialog({
-                                autoOpen: false,
-                                height: 800,
-                                width: 800,
-                                modal: true
-                            });
-                    donateur_dialog
-                            .dialog( "open" )
-                            .on('click', '#donateur', function(){
-                                donateur_id = $(this).find(".id").text();
-                                donateur_dialog.dialog("destroy");
-                                $("select#donateur").val(donateur_id);
-                            });
+        <script type="text/javascript" >
+            function adressePost( $form, callback ){
+                // Retrouver les valeurs du formulaire
+                var values = {};
+                $.each( $form.serializeArray(), function(i, field) {
+                    values[field.name] = field.value;
                 });
-            })
+                // Envoyer les valeurs au contrôleur
+                $.ajax({
+                    type        : $form.attr( 'method' ),
+                    url         : $form.attr( 'action' ),
+                    data        : values,
+                    success     : function(data) {
+                        callback( data );
+                        //vider la div et mettre à jour la div avec les données reçues
+                        $("#adresse_table")
+                                .empty()
+                                .hide()
+                                .append(data)
+                                .fadeIn(100);
+                    }
+                });
+            }
+
+            $(document).ready(function( ) {
+                var forms = [
+                    '[ name="{{ adresse_form.vars.full_name }}"]'
+                ];
+
+                $(forms.join(',')).submit(function (e) {
+                    e.preventDefault();
+                    adressePost($(this), function callback(response) {
+                    });
+
+                    return false;
+                });
+
+                /**
+                 * Sur click du champ Donateur,
+                 * ouvrir une fenêtre modale contenant la liste des donateurs
+                 */
+                $("#donateur").on( "click", function(){
+                    var donateur_id;
+                    var donateur_dialog;
+                    // si la fenêtre n'a pas été initialisée...
+                    if (typeof donateur_dialog === "undefined") {
+                        // créer une fenêtre à partir d'une nouvelle div
+                        donateur_dialog = $("<div title='Choisissez un donateur'></div>")
+                                .load('{{ path('donateur_search') }}')
+                                .dialog({
+                                    autoOpen: false,
+                                    height: 800,
+                                    width: 800,
+                                    modal: true
+                                });
+                        donateur_dialog
+                                .dialog("open")
+                                .on('click', '#donateur', function () {
+                                    donateur_id = $(this).find(".id").text();
+                                    donateur_dialog.dialog("close");
+                                    $("#donateur").val(donateur_id);
+                                });
+                    }
+                    // si la fenêtre existe déjà, l'ouvrir
+                    else{
+                        donateur_dialog.dialog( "open" );
+                    }
+                });
+            });
         </script>
     {% endblock %}
+
     {% block stylesheets %}
+        {{ parent() }}
         {% stylesheets 'css/table.css' %}
         <link rel="stylesheet" href="{{ asset_url }}" type="text/css">
         {% endstylesheets %}
     {% endblock %}
+
 {% endblock %}
 
 {% block body %}
-    {{ form_start(list_form) }}
-    {{ form_errors(list_form) }}
-    {{ form(list_form) }}
-    {{ form_end(list_form) }}
+    {{ form_start(adresse_form) }}
+    {{ form_errors(adresse_form) }}
+    {{ form(adresse_form) }}
+    {{ form_end(adresse_form) }}
     <a href="{{ path('adresse_new') }}">Ajouter</a>
 
     <div id="adresse_table">
