@@ -55,6 +55,6 @@ class DonType extends AbstractType
      */
     public function getName()
     {
-        return 'gesdon2_gesdon2bundle_don';
+        return 'don';
     }
 }

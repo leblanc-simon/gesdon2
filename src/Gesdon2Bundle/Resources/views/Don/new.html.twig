@@ -9,9 +9,41 @@
         {% javascripts 'js/jquery-ui/datepicker-fr.js' %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
-        {% javascripts 'js/new.js'%}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
+        <script type="text/javascript">
+            $(document).ready(function( ) {
+                /**
+                 * Sur click du champ Donateur,
+                 * ouvrir une fenêtre modale contenant la liste des donateurs
+                 */
+                var adresse_dialog;
+                $("#don_adresse").on( "click", function(){
+                    var adresse_id;
+                    // si la fenêtre n'a pas été initialisée...
+                    if (typeof adresse_dialog === "undefined") {
+                        // créer une fenêtre à partir d'une nouvelle div
+                        adresse_dialog = $("<div title='Choisissez une adresse'></div>")
+                                .load('{{ path('adresse_search') }}')
+                                .dialog({
+                                    autoOpen: false,
+                                    height: 800,
+                                    width: 800,
+                                    modal: true
+                                });
+                        adresse_dialog
+                                .dialog("open")
+                                .on('click', '#adresse', function () {
+                                    adresse_id = $(this).find(".id").text();
+                                    adresse_dialog.dialog("close");
+                                    $("#don_adresse").val(adresse_id);
+                                });
+                    }
+                    // si la fenêtre existe déjà, l'ouvrir
+                    else{
+                        adresse_dialog.dialog( "open" );
+                    }
+                });
+            });
+        </script>
     {% endblock %}
     <title>Créer un don</title>
 {% endblock %}
@@ -20,11 +52,6 @@
     <h1>Créer un don</h1>
 
     <div>
-        {# TODO remplacer par un formulaire ne tenant compte que de l'ID #}
-        {# TODO afficher les autres informations sous forme de texte #}
-        <label for="donateur">Donateur</label>
-        <input type="text" name="donateur" id="donateur">
-
         {{ form_start(form) }}
         {{ form_errors(form) }}
         {{ form(form) }}

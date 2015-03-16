@@ -3,14 +3,15 @@
 namespace Gesdon2Bundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Gesdon2Bundle\Form\DonateurSearchType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+
 use Gesdon2Bundle\Entity\Donateur;
 use Gesdon2Bundle\Form\DonateurType;
+use Gesdon2Bundle\Form\DonateurSearchType;
 
 class DonateurController extends Controller
 {

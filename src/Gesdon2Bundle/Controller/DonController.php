@@ -3,15 +3,16 @@
 namespace Gesdon2Bundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Gesdon2Bundle\Entity\Adresse;
-use Gesdon2Bundle\Entity\Don;
-use Gesdon2Bundle\Form\DonType;
-use Gesdon2Bundle\Form\DonSearchType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+
+use Gesdon2Bundle\Entity\Adresse;
+use Gesdon2Bundle\Entity\Don;
+use Gesdon2Bundle\Form\DonType;
+use Gesdon2Bundle\Form\DonSearchType;
 
 class DonController extends Controller
 {

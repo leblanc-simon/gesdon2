@@ -2,14 +2,15 @@
 
 namespace Gesdon2Bundle\Controller;
 
-use Gesdon2Bundle\Entity\Adresse;
-use Gesdon2Bundle\Form\AdresseType;
-use Gesdon2Bundle\Form\AdresseSearchType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+
+use Gesdon2Bundle\Entity\Adresse;
+use Gesdon2Bundle\Form\AdresseType;
+use Gesdon2Bundle\Form\AdresseSearchType;
 
 class AdresseController extends Controller
 {

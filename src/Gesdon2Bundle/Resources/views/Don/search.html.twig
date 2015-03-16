@@ -33,11 +33,9 @@
             }
 
             $(document).ready(function( ) {
-                var forms = [
-                    '[ name="{{ don_form.vars.full_name }}"]'
-                ];
+                var form = $('#don_form');
 
-                $(forms.join(',')).submit(function (e) {
+                $(form).submit(function (e) {
                     e.preventDefault();
                     donPost($(this), function callback(response) {
                     });
@@ -49,9 +47,9 @@
                  * Sur click du champ Donateur,
                  * ouvrir une fenêtre modale contenant la liste des adresses
                  */
+                var adresse_id;
+                var adresse_dialog;
                 $("#adresse").on( "click", function(){
-                    var adresse_id;
-                    var adresse_dialog;
                     // si la fenêtre n'a pas été initialisée...
                     if (typeof adresse_dialog === "undefined") {
                         // créer une fenêtre à partir d'une nouvelle div

@@ -33,11 +33,8 @@
             }
 
             $(document).ready(function( ) {
-                var forms = [
-                    '[ name="{{ donateur_form.vars.full_name }}"]'
-                ];
-
-                $(forms.join(',')).submit(function (e) {
+                var form = $('#donateur_form');
+                $(form).submit(function (e) {
                     e.preventDefault();
                     donateurPost($(this), function callback(response) {
                     });

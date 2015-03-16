@@ -32,11 +32,8 @@
             }
 
             $(document).ready(function( ) {
-                var forms = [
-                    '[ name="{{ adresse_form.vars.full_name }}"]'
-                ];
-
-                $(forms.join(',')).submit(function (e) {
+                var form = $('#adresse_form');
+                $(form).submit(function (e) {
                     e.preventDefault();
                     adressePost($(this), function callback(response) {
                     });
@@ -48,9 +45,9 @@
                  * Sur click du champ Donateur,
                  * ouvrir une fenêtre modale contenant la liste des donateurs
                  */
+                var donateur_dialog;
                 $("#donateur").on( "click", function(){
                     var donateur_id;
-                    var donateur_dialog;
                     // si la fenêtre n'a pas été initialisée...
                     if (typeof donateur_dialog === "undefined") {
                         // créer une fenêtre à partir d'une nouvelle div
@@ -94,7 +91,6 @@
     {{ form(adresse_form) }}
     {{ form_end(adresse_form) }}
     <a href="{{ path('adresse_new') }}">Ajouter</a>
-
     <div id="adresse_table">
         {# charger le tableau ici #}
     </div>
