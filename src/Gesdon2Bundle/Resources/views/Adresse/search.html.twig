@@ -37,17 +37,17 @@
                     e.preventDefault();
                     adressePost($(this), function callback(response) {
                     });
-
                     return false;
                 });
+                $('#adresse_search').removeAttr('disabled');
 
                 /**
                  * Sur click du champ Donateur,
                  * ouvrir une fenêtre modale contenant la liste des donateurs
                  */
                 var donateur_dialog;
+                var donateur_id;
                 $("#donateur").on( "click", function(){
-                    var donateur_id;
                     // si la fenêtre n'a pas été initialisée...
                     if (typeof donateur_dialog === "undefined") {
                         // créer une fenêtre à partir d'une nouvelle div
@@ -68,9 +68,7 @@
                                 });
                     }
                     // si la fenêtre existe déjà, l'ouvrir
-                    else{
-                        donateur_dialog.dialog( "open" );
-                    }
+                    else donateur_dialog.dialog( "open" );
                 });
             });
         </script>

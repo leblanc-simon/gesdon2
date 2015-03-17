@@ -16,8 +16,8 @@
                  * ouvrir une fenêtre modale contenant la liste des donateurs
                  */
                 var adresse_dialog;
+                var adresse_id;
                 $("#don_adresse").on( "click", function(){
-                    var adresse_id;
                     // si la fenêtre n'a pas été initialisée...
                     if (typeof adresse_dialog === "undefined") {
                         // créer une fenêtre à partir d'une nouvelle div
@@ -38,9 +38,7 @@
                                 });
                     }
                     // si la fenêtre existe déjà, l'ouvrir
-                    else{
-                        adresse_dialog.dialog( "open" );
-                    }
+                    else adresse_dialog.dialog( "open" );
                 });
             });
         </script>

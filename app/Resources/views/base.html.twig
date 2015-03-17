@@ -6,17 +6,12 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 
         {% block stylesheets %}
-            {% stylesheets 'js/jquery-ui/jquery-ui.min.css' filter='cssrewrite' %}
-            <link rel="stylesheet" href="{{ asset_url }}" type="text/css">
-            {% endstylesheets %}
+            <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" type="text/css">
         {% endblock %}
 
         {% block javascripts %}
-            {% javascripts
-                'js/jquery-2.1.3.min.js'
-                'js/jquery-ui/jquery-ui.min.js' %}
-            <script type="text/javascript" src="{{ asset_url }}"></script>
-            {% endjavascripts %}
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
         {% endblock %}
     </head>
     <body>

@@ -8,49 +8,50 @@
 
 
 {% block body %}
-    <table id="entities">
-        <tr>
-            <th>ID</th>
-            <th>Donateur</th>
-            <th>Adresse 1</th>
-            <th>Adresse 2</th>
-            <th>Code Postal</th>
-            <th>Ville</th>
-            <th>Pays</th>
-        </tr>
-        {# pour chaque instance de l'entité... #}
-        {% for instance in instances %}
-            {# faire une ligne sur deux de classe 'alt', pour mise en forme #}
-            {# définir l'id à "adresse" pour identifier dans jQuery #}
-            <tr {% if loop.index is divisible by(2) %} class="alt"{% endif %} id="adresse">
-                <td class="id">{{ instance.id }}</td>
-                <td class="donateur">{{ instance.donateur }}</td>
-                <td class="adresse1">{{ instance.adresse1 }}</td>
-                <td class="adresse2">{{ instance.adresse2 }}</td>
-                <td class="codePostal">{{ instance.codePostal }}</td>
-                <td class="ville">{{ instance.ville }}</td>
-                <td class="pays">{{ instance.pays }}</td>
-
-                {# afficher les liens vers le formulaire de modification dans la dernière colonne #}
-                <td>
-                    <a href="{{ path('adresse_edit', { 'id': instance.id }) }}">Modifier</a>
-                </td>
+    <body>
+        <table id="entities">
+            <tr>
+                <th>ID</th>
+                <th>Donateur</th>
+                <th>Adresse 1</th>
+                <th>Adresse 2</th>
+                <th>Code Postal</th>
+                <th>Ville</th>
+                <th>Pays</th>
             </tr>
-        {% endfor %}
-    </table>
+            {# pour chaque instance de l'entité... #}
+            {% for instance in instances %}
+                {# faire une ligne sur deux de classe 'alt', pour mise en forme #}
+                {# définir l'id à "adresse" pour identifier dans jQuery #}
+                <tr {% if loop.index is divisible by(2) %} class="alt"{% endif %} id="adresse">
+                    <td class="id">{{ instance.id }}</td>
+                    <td class="donateur">{{ instance.donateur }}</td>
+                    <td class="adresse1">{{ instance.adresse1 }}</td>
+                    <td class="adresse2">{{ instance.adresse2 }}</td>
+                    <td class="codePostal">{{ instance.codePostal }}</td>
+                    <td class="ville">{{ instance.ville }}</td>
+                    <td class="pays">{{ instance.pays }}</td>
 
-    {# Mettre en surbrillance au survol #}
-    <script type="text/javascript">
-        $(document).ready(function( ) {
-            $("table#entities").delegate('tr','mouseover mouseleave',function(e){
-                if (e.type == 'mouseover') {
-                    $(this).addClass("hover");
-                }
-                else {
-                    $(this).removeClass("hover");
-                }
+                    {# afficher les liens vers le formulaire de modification dans la dernière colonne #}
+                    <td>
+                        <a href="{{ path('adresse_edit', { 'id': instance.id }) }}">Modifier</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        {# Mettre en surbrillance au survol #}
+        <script type="text/javascript">
+            $(document).ready(function( ) {
+                $("table#entities").delegate('tr','mouseover mouseleave',function(e){
+                    if (e.type == 'mouseover') {
+                        $(this).addClass("hover");
+                    }
+                    else {
+                        $(this).removeClass("hover");
+                    }
+                })
             })
-        })
-    </script>
-
+        </script>
+    </body>
 {% endblock %}

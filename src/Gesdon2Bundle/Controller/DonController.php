@@ -57,7 +57,7 @@ class DonController extends Controller
 
         $form->add('don_search', 'submit', array(
             'label' => 'Rechercher',
-            //'disabled' => 'true',
+            'disabled' => 'true',
         ));
 
         return $form;
@@ -92,7 +92,7 @@ class DonController extends Controller
             // retrouver les données
             $filter = $form->getData();
             // pour debug
-            dump($filter);
+            // dump($filter);
             if (!empty($filter)) {
                 // créer une expression AND
                 $andX = $qb->expr()->andX();

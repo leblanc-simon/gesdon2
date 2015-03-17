@@ -39,9 +39,9 @@
                     e.preventDefault();
                     donPost($(this), function callback(response) {
                     });
-
                     return false;
                 });
+                $('#don_search').removeAttr('disabled');
 
                 /**
                  * Sur click du champ Donateur,
@@ -70,9 +70,7 @@
                                 });
                     }
                     // si la fenêtre existe déjà, l'ouvrir
-                    else{
-                        adresse_dialog.dialog( "open" );
-                    }
+                    else adresse_dialog.dialog( "open" );
                 });
             });
         </script>
