@@ -16,6 +16,13 @@ class DonSearchType extends AbstractType
     {
         $builder
             // TODO trouver un moyen de filtrer par période
+            /*->add('entre', 'date', array('required' => false))
+            ->add('et', 'date', array('required' => false))*/
+            // type de formulaire date_range personnalisé
+            // source https://gist.github.com/havvg/4204307
+            // provoque une erreur, à revoir
+            /*->add('date', 'date_range', array('required' => false))*/
+
             ->add('date', 'date', array('required' => false))
             ->add('montant', 'number', array('required' => false))
             ->add('moyen','entity',

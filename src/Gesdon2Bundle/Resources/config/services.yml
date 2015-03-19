@@ -24,3 +24,10 @@ services:
         arguments: ["@doctrine.orm.entity_manager"]
         tags:
             - { name: form.type, alias: donateur_selector }
+
+# type de champ personnalisé DateRange
+# source : https://gist.github.com/havvg/4204307
+    gesdon2.type.date_range:
+        class: Gesdon2Bundle\Form\DateRangeType
+        tags:
+            - { name: form.type, alias: date_range }

@@ -9,8 +9,8 @@ use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use Ormigo\Bundle\OrmigoBundle\Form\DataTransformer\DateRangeViewTransformer;
-use Ormigo\Bundle\OrmigoBundle\Form\Validator\DateRangeValidator;
+use Gesdon2Bundle\Form\DataTransformer\DateRangeViewTransformer;
+use Gesdon2Bundle\Form\Validator\DateRangeValidator;
 
 class DateRangeType extends AbstractType
 {
@@ -46,7 +46,7 @@ class DateRangeType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Ormigo\Bundle\OrmigoBundle\Form\Model\DateRange',
+            'data_class' => 'Gesdon2Bundle\Form\Model\DateRange',
             'end_options' => array(),
             'start_options' => array(),
             'transformer' => null,

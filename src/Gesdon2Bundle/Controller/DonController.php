@@ -91,12 +91,12 @@ class DonController extends Controller
         if ($form->isValid()){
             // retrouver les données
             $filter = $form->getData();
-            // pour debug
-            // dump($filter);
+            // si le filtre n'est pas vide (au moins un champ du formulaire est renseigné)
             if (!empty($filter)) {
                 // créer une expression AND
                 $andX = $qb->expr()->andX();
                 // pour chaque champ du filtre et sa valeur
+                // TODO gérer les dates (trouver un moyen de filtrer sur un intervalle)
                 foreach ($filter as $column => $value) {
                     // si le champ est un tableau
                     // (donc, dans le cas du formulaire, un tableau d'objets entité)
