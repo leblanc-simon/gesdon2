@@ -19,7 +19,7 @@
         {% for instance in instances %}
             {# faire une ligne sur deux de classe 'alt', pour mise en forme #}
             {# définir l'id à "donateur" pour identifier dans jQuery #}
-            <tr {% if loop.index is divisible by(2) %} class="alt"{% endif %} id="donateur">
+            <tr {% if loop.index is divisible by(2) %} class="donateur alt"{% endif %} class="donateur">
                 <td class="id">{{ instance.id }}</td>
                 <td class="type">{{ instance.type }}</td>
                 <td class="nom">{{ instance.nom }}</td>

@@ -18,7 +18,10 @@ class DonController extends Controller
 {
 
     /**
-     * Afficher la liste des dons.
+     * Afficher la page de recherche des dons.
+     *
+     * @Route("/Don", name="don_search")
+     * @Method("GET")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -67,7 +70,7 @@ class DonController extends Controller
      * Créer le tableau HTML des dons.
      *
      * @Route("/Don/table", name="don_table")
-     * @Method({"POST"})
+     * @Method("POST")
      * @Template( "Gesdon2Bundle:Don:table.html.twig" )
      *
      * @param Request $request
@@ -149,13 +152,12 @@ class DonController extends Controller
     }
 
     /**
-     * Générer le formulaire de création de don.
+     * Afficher le formulaire de création de don.
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/new", name="new")
-     * @Method("GET")
+     * @Route("/Don/new", name="don_new")
      * @Template("Gesdon2Bundle:Don:new.html.twig")
      */
     public function newAction(Request $request)
@@ -202,13 +204,13 @@ class DonController extends Controller
     }
 
     /**
-     * Afficher un formulaire pour modifier un don.
+     * Afficher un formulaire de modification d'un don.
      *
      * @param int $id           L'identifiant du don
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @Route("/{id}/edit", name="edit")
+     * @Route("/Don/edit/{id}", name="don_edit")
      * @Method("GET")
      * @Template()
      */
@@ -271,7 +273,7 @@ class DonController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @Route("/Don/{id}", name="update")
+     * @Route("/Don/update/{id}", name="don_update")
      * @Method("PUT")
      * @Template("Gesdon2Bundle:Don:edit.html.twig")
      */
@@ -311,7 +313,7 @@ class DonController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @Route("/{entity}/{id}", name="delete")
+     * @Route("/Don/delete/{id}", name="don_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

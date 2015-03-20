@@ -1,6 +1,6 @@
 gesdon2:
-    resource: "@Gesdon2Bundle/Resources/config/routing.yml"
-    prefix:   /
+    resource: @Gesdon2Bundle/Controller
+    type:     annotation
 
 app:
     resource: @AppBundle/Controller/

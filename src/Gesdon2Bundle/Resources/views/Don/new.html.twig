@@ -6,13 +6,11 @@
 {% block head %}
     {% block javascripts %}
         {{ parent() }}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
         <script type="text/javascript">
             $(document).ready(function( ) {
                 /**
-                 * Sur click du champ Donateur,
-                 * ouvrir une fenêtre modale contenant la liste des donateurs
+                 * Sur click du champ Adresse,
+                 * ouvrir une fenêtre modale contenant la liste des adresses
                  */
                 var adresse_dialog;
                 var adresse_id;
@@ -30,7 +28,7 @@
                                 });
                         adresse_dialog
                                 .dialog("open")
-                                .on('click', '#adresse', function () {
+                                .on("click", "tr.adresse", function () {
                                     adresse_id = $(this).find(".id").text();
                                     adresse_dialog.dialog("close");
                                     $("#don_adresse").val(adresse_id);

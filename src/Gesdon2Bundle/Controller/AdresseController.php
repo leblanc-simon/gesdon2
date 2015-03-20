@@ -16,7 +16,10 @@ class AdresseController extends Controller
 {
 
     /**
-     * Afficher la liste des adresses.
+     * Afficher la page de recherche des adresses.
+     *
+     * @Route("/Adresse", name="adresse_search")
+     * @Method("GET")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -65,7 +68,7 @@ class AdresseController extends Controller
      * Créer le tableau HTML des adresses
      *
      * @Route("/Adresse/table", name="adresse_table")
-     * @Method({"POST"})
+     * @Method("POST")
      * @Template( "Gesdon2Bundle:Adresse:table.html.twig" )
      *
      * @param Request $request
@@ -139,13 +142,12 @@ class AdresseController extends Controller
     }
 
     /**
-     * Générer le formulaire de création d'Adresse.
+     * Afficher le formulaire de création d'Adresse.
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/new", name="new")
-     * @Method("GET")
+     * @Route("/Adresse/new", name="adresse_new")
      * @Template("Gesdon2Bundle:Adresse:new.html.twig")
      */
     public function newAction(Request $request)
@@ -192,13 +194,13 @@ class AdresseController extends Controller
     }
 
     /**
-     * Afficher un formulaire pour modifier un instance.
+     * Afficher un formulaire de modification d'une adresse.
      *
-     * @param int $id           L'identifiant de l'instance
+     * @param int $id           L'identifiant de l'adresse
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @Route("/{id}/edit", name="edit")
+     * @Route("Adresse/edit/{id}", name="adresse_edit")
      * @Method("GET")
      * @Template()
      */
@@ -256,14 +258,14 @@ class AdresseController extends Controller
     }
 
     /**
-     * Modifier une instance.
+     * Modifier une adresse.
      *
      * @param Request $request
-     * @param int $id           L'identifiant de l'instance
+     * @param int $id           L'identifiant de l'adresse
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @Route("/{entity}/{id}", name="update")
+     * @Route("/Adresse/update/{id}", name="adresse_update")
      * @Method("PUT")
      * @Template("Gesdon2Bundle:Adresse:edit.html.twig")
      */
@@ -296,14 +298,14 @@ class AdresseController extends Controller
     }
 
     /**
-     * Supprimer une instance.
+     * Supprimer une adresse.
      *
      * @param Request $request
-     * @param int $id           l'identifiant de l'instance
+     * @param int $id           l'identifiant de l'adresse
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @Route("/{entity}/{id}", name="delete")
+     * @Route("/Adresse/delete/{id}", name="adresse_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

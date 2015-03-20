@@ -44,7 +44,7 @@
                 $('#don_search').removeAttr('disabled');
 
                 /**
-                 * Sur click du champ Donateur,
+                 * Sur click du champ Adresse,
                  * ouvrir une fenêtre modale contenant la liste des adresses
                  */
                 var adresse_id;
@@ -63,7 +63,7 @@
                                 });
                         adresse_dialog
                                 .dialog("open")
-                                .on('click', '#adresse', function () {
+                                .on('click', 'tr.adresse', function () {
                                     adresse_id = $(this).find(".id").text();
                                     adresse_dialog.dialog("close");
                                     $("#adresse").val(adresse_id);

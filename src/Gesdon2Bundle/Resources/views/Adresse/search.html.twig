@@ -61,7 +61,7 @@
                                 });
                         donateur_dialog
                                 .dialog("open")
-                                .on('click', '#donateur', function () {
+                                .on('click', 'tr.donateur', function () {
                                     donateur_id = $(this).find(".id").text();
                                     donateur_dialog.dialog("close");
                                     $("#donateur").val(donateur_id);

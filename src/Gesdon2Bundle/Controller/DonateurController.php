@@ -17,7 +17,10 @@ class DonateurController extends Controller
 {
 
     /**
-     * Afficher la liste des donateurs.
+     * Afficher la page de recherche des donateurs.
+     *
+     * @Route("/Donateur", name="donateur_search")
+     * @Method("GET")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -64,9 +67,9 @@ class DonateurController extends Controller
     /**
      * Créer le tableau HTML des donateurs
      *
-     * @Route("/Adresse/table", name="adresse_table")
+     * @Route("/Donateur/table", name="donateur_table")
      * @Method({"POST"})
-     * @Template( "Gesdon2Bundle:Adresse:table.html.twig" )
+     * @Template( "Gesdon2Bundle:Donateur:table.html.twig" )
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -140,13 +143,12 @@ class DonateurController extends Controller
     }
 
     /**
-     * Générer le formulaire de création
+     * Afficher le formulaire de création des donateurs.
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/new", name="new")
-     * @Method("GET")
+     * @Route("/Donateur/new", name="donateur_new")
      * @Template("Gesdon2Bundle:Donateur:new.html.twig")
      */
     public function newAction(Request $request)
@@ -193,13 +195,13 @@ class DonateurController extends Controller
     }
 
     /**
-     * Afficher un formulaire pour modifier un donateur.
+     * Afficher un formulaire de modification d'un donateur.
      *
      * @param int $id           L'identifiant du donateur
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @Route("/{id}/edit", name="edit")
+     * @Route("Donateur/edit/{id}", name="donateur_edit")
      * @Method("GET")
      * @Template()
      */
@@ -264,7 +266,7 @@ class DonateurController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @Route("/Donateur/{id}", name="update")
+     * @Route("/Donateur/update/{id}", name="donateur_update")
      * @Method("PUT")
      * @Template("Gesdon2Bundle:Donateur:edit.html.twig")
      */
@@ -304,7 +306,7 @@ class DonateurController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @Route("/{entity}/{id}", name="delete")
+     * @Route("/Donateur/delete/{id}", name="donateur_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)

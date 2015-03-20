@@ -24,7 +24,7 @@
     {# pour chaque instance de l'entité... #}
         {% for instance in instances %}
             {# faire une ligne sur deux de classe 'alt', pour mise en forme #}
-            <tr {% if loop.index is divisible by(2) %} class="alt"{% endif %} id="don">
+            <tr {% if loop.index is divisible by(2) %} class="don alt"{% endif %} class="don">
                 <td class="id">{{ instance.id }}</td>
                 <td class="adresse">{{ instance.adresse }}</td>
                 <td class="date">{{ instance.date|date("Y-m-d") }}</td>

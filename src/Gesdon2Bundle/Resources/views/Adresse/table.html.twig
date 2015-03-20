@@ -23,7 +23,7 @@
             {% for instance in instances %}
                 {# faire une ligne sur deux de classe 'alt', pour mise en forme #}
                 {# définir l'id à "adresse" pour identifier dans jQuery #}
-                <tr {% if loop.index is divisible by(2) %} class="alt"{% endif %} id="adresse">
+                <tr {% if loop.index is divisible by(2) %} class="adresse alt"{% endif %} class="adresse">
                     <td class="id">{{ instance.id }}</td>
                     <td class="donateur">{{ instance.donateur }}</td>
                     <td class="adresse1">{{ instance.adresse1 }}</td>
