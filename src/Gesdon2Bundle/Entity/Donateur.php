@@ -11,8 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Donateur
  *
  * @ORM\Table(
- * name="donateur",
- * uniqueConstraints={@UniqueConstraint(name="courriel", columns={"courriel"})}
+ * name="donateur"
  * )
  * @ORM\Entity()
  * @UniqueEntity("courriel")
@@ -41,7 +40,7 @@ class Donateur
      * @Assert\NotBlank()
      *
      * @ORM\ManyToOne(targetEntity="Type")
-     * @ORM\JoinColumn(name="Type", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="Type", referencedColumnName="id", nullable=true)
      */
     private $type;
 
@@ -51,7 +50,7 @@ class Donateur
      *
      * @var string
      * @Assert\NotBlank()
-     * @ORM\Column(name="Nom", type="string", length=255)
+     * @ORM\Column(name="Nom", type="string", length=255, nullable=true)
      */
     private $nom;
 
@@ -67,12 +66,10 @@ class Donateur
 
     /**
      * Courriel.
-     * Requis.
      *
      * @var string
      *
-     * @ORM\Column(name="Courriel", type="string", length=255)
-	 * @Assert\NotBlank()
+     * @ORM\Column(name="Courriel", type="string", length=255, nullable=true)
      * @Assert\Email(
      * message="{{ value }} n'est pas un email valide.",
      * checkMX=false

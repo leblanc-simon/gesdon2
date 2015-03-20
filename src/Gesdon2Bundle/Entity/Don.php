@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Don
 {
     /**
-     * @var integer
+     * @var integer Id
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -26,7 +26,7 @@ class Don
      * Adresse liée.
      * Clé étrangère.
      *
-     * @var adresse
+     * @var adresse Adresse
      *
      * @ORM\ManyToOne(targetEntity="Adresse",cascade={"persist"})
      * @ORM\JoinColumn(name="adresse", referencedColumnName="id", nullable=true)
@@ -34,16 +34,16 @@ class Don
     private $adresse;
 
     /**
-     * @var \DateTime
+     * @var \DateTime Date
      *
-     * @ORM\Column(name="date", type="datetime")
+     * @ORM\Column(name="date", type="datetime", nullable=true)
      */
     private $date;
 
     /**
-     * @var string
+     * @var string Montant
      *
-     * @ORM\Column(name="montant", type="decimal")
+     * @ORM\Column(name="montant", type="decimal", nullable=true)
      */
     private $montant;
 
@@ -56,33 +56,33 @@ class Don
      *
      * @Assert\NotBlank()
      * @ORM\ManyToOne(targetEntity="Moyen")
-     * @ORM\JoinColumn(name="moyen", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="moyen", referencedColumnName="id", nullable=true)
      */
     private $moyen;
 
     /**
-     * @var string
+     * @var string Description du moyen de paiement, si "autre".
      *
      * @ORM\Column(name="moyenDesc", type="string", length=255, nullable=true)
      */
     private $moyenDesc;
 
     /**
-     * @var boolean
+     * @var boolean Recurrence
      *
-     * @ORM\Column(name="recurrence", type="boolean")
+     * @ORM\Column(name="recurrence", type="boolean", nullable=true)
      */
     private $recurrence;
 
     /**
-     * @var string
+     * @var string Numéro de transaction
      *
      * @ORM\Column(name="transacNum", type="string", length=255, nullable=true)
      */
     private $transacNum;
 
     /**
-     * @var \DateTime
+     * @var \DateTime Date de fin de récurrence
      *
      * @ORM\Column(name="recurrDateFin", type="datetime", nullable=true)
      */
@@ -93,7 +93,7 @@ class Don
      *
      * @var string
      *
-     * @ORM\Column(name="courriel", type="string", length=255)
+     * @ORM\Column(name="courriel", type="string", length=255, nullable=true)
      */
     private $courriel;
 
@@ -107,7 +107,7 @@ class Don
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -152,7 +152,7 @@ class Don
     /**
      * Get date
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDate()
     {
@@ -175,7 +175,7 @@ class Don
     /**
      * Get montant
      *
-     * @return string 
+     * @return string
      */
     public function getMontant()
     {
@@ -198,7 +198,7 @@ class Don
     /**
      * Get moyen
      *
-     * @return string 
+     * @return string
      */
     public function getMoyen()
     {
@@ -221,7 +221,7 @@ class Don
     /**
      * Get moyenDesc
      *
-     * @return string 
+     * @return string
      */
     public function getMoyenDesc()
     {
@@ -244,7 +244,7 @@ class Don
     /**
      * Get recurrence
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getRecurrence()
     {
@@ -267,7 +267,7 @@ class Don
     /**
      * Get transacNum
      *
-     * @return string 
+     * @return string
      */
     public function getTransacNum()
     {
@@ -290,7 +290,7 @@ class Don
     /**
      * Get dateFinRecurrence
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getdateFinRecurrence()
     {
@@ -313,7 +313,7 @@ class Don
     /**
      * Get courriel
      *
-     * @return string 
+     * @return string
      */
     public function getCourriel()
     {
