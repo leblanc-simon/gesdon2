@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\QueryBuilder;
 
 use Gesdon2Bundle\Entity\Adresse;
 use Gesdon2Bundle\Form\AdresseType;
@@ -79,6 +80,7 @@ class AdresseController extends Controller
         // invoquer le manager Doctrine
         $em = $this->getDoctrine()->getManager();
         // créer un constructeur de requêtes DQL
+        /** @var QueryBuilder $qb */
         $qb = $em->createQueryBuilder();
         // sélectionner dans la table Adresse
         $qb ->select('a')
@@ -97,31 +99,38 @@ class AdresseController extends Controller
             if (!empty($filter)) {
                 // créer une expression AND
                 $andX = $qb->expr()->andX();
-                // pour chaque champ du filtre et sa valeur
-                foreach ($filter as $column => $value) {
-                    // si le champ est un tableau
-                    // (donc, dans le cas du formulaire, un tableau d'objets entité)
-                    if (is_array($value)) {
-                        // si le tableau n'est pas vide...
-                        if (!empty($value)) {
-                            // ajouter une clause IN
-                            // où la valeur de la colonne est dans le tableau d'IDs
-                            $andX->add("a.{$column} IN(:ids)");
-                            // affecter la liste d'IDs du tableau au paramètre
-                            $qb->setParameter('ids',array_values($value));
-                        }
-                    }
-                    // si le champ n'est pas un tableau
-                    else {
-                        // si le champ n'est pas vide
-                        if ($value != '') {
-                            // ajouter une clause LIKE, traiter comme du texte
-                            $andX->add($qb->expr()->like(
-                                "a.{$column}",
-                                "'{$value}'"));
-                        }
-                    }
+
+                if (!empty($filter['donateur']))
+                {
+                    $andX->add($qb->expr()->eq('a.donateur'      , '?1'));
+                    $qb->setParameter(1,$filter['donateur']);
                 }
+                if (!empty($filter['adresse1']))
+                {
+                    $andX->add($qb->expr()->like('a.adresse1'    , '?2'));
+                    $qb->setParameter(2,$filter['adresse1']);
+                }
+                if (!empty($filter['adresse2']))
+                {
+                    $andX->add($qb->expr()->like('a.adresse2'    , '?3'));
+                    $qb->setParameter(3,$filter['adresse2']);
+                }
+                if (!empty($filter['codePostal']))
+                {
+                    $andX->add($qb->expr()->like('a.codePostal'  , '?4'));
+                    $qb->setParameter(4,$filter['codePostal']);
+                }
+                if (!empty($filter['ville']))
+                {
+                    $andX->add($qb->expr()->like('a.ville'       , '?5'));
+                    $qb->setParameter(5,$filter['ville']);
+                }
+                if (!empty($filter['pays']))
+                {
+                    $andX->add($qb->expr()->like('a.pays'        , '?6'));
+                    $qb->setParameter(6,$filter['pays']);
+                }
+
                 // si des champs du filtre ont été renseignés, définir la clause where
                 $andParts = $andX->getParts();
                 if (!empty($andParts)) {

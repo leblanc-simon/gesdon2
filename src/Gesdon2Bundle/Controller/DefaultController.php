@@ -60,7 +60,7 @@ adresse_code_postal=01000&
 adresse_ville=Paris&
 adresse_pays=France&
 don_date=2015-03-20&
-don_montant=999993&
+don_montant=9999,93&
 don_moyen=Carte%20bancaire&
 don_moyen_desc=&
 don_recurrence=0&
@@ -84,55 +84,65 @@ don_transac_num=&
         // invoquer l'Entity Manager de Doctrine
         $em = $dt->getManager();
 
-
-        // TODO vérifier l'existence des paramètres avant de créer la requête
-        // TODO ou bien remplacer l'absence de paramètre par un paramètre vide
         /** @var Type $donateurType */
         $donateurType = $dt->getRepository('Gesdon2Bundle:Type')->findOneBy(array('nom'
-            => $params['donateur_type']));
+            => !empty($params['donateur_type']) ? $params['donateur_type'] : ''));
+
         /** @var string $donateurNom Nom du donateur */
         $donateurNom
-            = (!empty($params['donateur_nom']) ? $params['donateur_nom'] : '');
+            = !empty($params['donateur_nom']) ? $params['donateur_nom'] : '';
+
         /** @var string $donateurPrenom Prénom du donateur */
         $donateurPrenom
-            = (!empty($params['donateur_prenom']) ? $params['donateur_prenom'] : '');
+            = !empty($params['donateur_prenom']) ? $params['donateur_prenom'] : '';
+
         /** @var string $donateurCourriel Adresse courriel du donateur */
         $donateurCourriel
-            = (!empty($params['donateur_courriel']) ? $params['donateur_courriel'] : '');
+            = !empty($params['donateur_courriel']) ? $params['donateur_courriel'] : '';
+
         /** @var string $adresseAdresse1 Numéro et voie */
         $adresseAdresse1
-            = (!empty($params['adresse_adresse1']) ? $params['adresse_adresse1'] : '');
+            = !empty($params['adresse_adresse1']) ? $params['adresse_adresse1'] : '';
+
         /** @var string $adresseAdresse2 Complément d'adresse */
         $adresseAdresse2
-            = (!empty($params['adresse_adresse2']) ? $params['adresse_adresse2'] : '');
+            = !empty($params['adresse_adresse2']) ? $params['adresse_adresse2'] : '';
+
         /** @var string $adresseCodePostal Code postal */
         $adresseCodePostal
-            = (!empty($params['adresse_code_postal']) ? $params['adresse_code_postal'] : '');
+            = !empty($params['adresse_code_postal']) ? $params['adresse_code_postal'] : '';
         /** @var string $adresseVille Commune */
         $adresseVille
-            = (!empty($params['adresse_ville']) ? $params['adresse_ville'] : '');
+            = !empty($params['adresse_ville']) ? $params['adresse_ville'] : '';
+
         /** @var string $adressePays Pays */
         $adressePays
-            = (!empty($params['adresse_pays']) ? $params['adresse_pays'] : '');
+            = !empty($params['adresse_pays']) ? $params['adresse_pays'] : '';
+
         /** @var DateTime $donDate Date de création du don */
-        if($params['don_date']=="") $donDate = new DateTime('now');
-        else $donDate
-            = new DateTime($params['don_date']);
-        /** @var string $donMontant Montant du don, TODO chaîne de caractères? */
+        $donDate =
+            !empty($params['don_date']) ? new DateTime($params['don_date']) : new DateTime('now');
+
+        /** @var string $donMontant Montant du don, TODO chaîne de caractères? Les parties décimales ne sont pas prises en compte ! */
         $donMontant
-            = (!empty($params['don_montant']) ? $params['don_montant'] : '');
+            = !empty($params['don_montant']) ? $params['don_montant'] : '';
+
         /** @var Moyen $moyen Moyen de paiement. */
         $donMoyen = $dt->getRepository('Gesdon2Bundle:Moyen')->findOneBy(array('nom'
-            => $params['don_moyen']));
+            => !empty($params['don_moyen']) ? $params['don_moyen'] : ''));
+
         /** @var string $donMoyenDesc Description du moyen de paiement */
         $donMoyenDesc
-            = (!empty($params['don_moyen_desc']) ? $params['don_moyen_desc'] : '');
+            = !empty($params['don_moyen_desc']) ? $params['don_moyen_desc'] : '';
+
         /** @var bool $donRecurrence Indicateur de recurrence du don */
-        $donRecurrence
-            = $params['don_recurrence'];
+        $donRecurrence =
+            !empty($params['don_recurrence']) ? $params['don_recurrence'] : '';
+
         /** @var DateTime $donDateFinRecurrence Date de fin de récurrence du don */
-        if($params['don_date_fin_recurrence']=="") $donDateFinRecurrence = null;
-        else $donDateFinRecurrence = new DateTime($params['don_date_fin_recurrence']);
+        $donDateFinRecurrence =
+            !empty($params['don_date_fin_recurrence']) ? new DateTime($params['don_date_fin_recurrence']) : null;
+
         /** @var string $donTransacNum Numéro de transaction (Paypal ou CM-CIC) */
         $donTransacNum
             = (!empty($params['don_transac_num']) ? $params['don_transac_num'] : '');
@@ -154,8 +164,6 @@ don_transac_num=&
                 $qb->expr()->eq('d.prenom'  , '?3'),
                 $qb->expr()->eq('d.courriel', '?4')
             ))
-            // TODO vérifier l'existence des paramètres avant de créer la requête
-            // TODO ou bien remplacer l'absence de paramètre par un paramètre vide
             ->setParameters(array(
                 1=>$donateurType,
                 2=>$donateurNom,
@@ -210,8 +218,6 @@ don_transac_num=&
                     $qb->expr()->eq('a.ville'       , '?5'),
                     $qb->expr()->eq('a.pays'        , '?6')
                 ))
-                // TODO vérifier l'existence des paramètres avant de créer la requête
-                // TODO ou bien remplacer l'absence de paramètre par un paramètre vide
                 ->setParameters(array(
                     1=>$donateur,
                     2=>$adresseAdresse1,
@@ -264,7 +270,7 @@ don_transac_num=&
         $don = new Don();
 
         // affecter les paramètres
-        $don->setAdresse            ($adresse); // TODO vérifier le type d'entrée des setters
+        $don->setAdresse            ($adresse);
         $don->setDate               ($donDate);
         $don->setMontant            ($donMontant);
         $don->setMoyen              ($donMoyen);
@@ -279,7 +285,7 @@ don_transac_num=&
         $em->persist($don);
         $em->flush();
 
-        // TODO retourner quelque chose
+        // TODO retourner quelque chose (code de réponse, code d'erreur)
         $response = new Response();
         $response->setStatusCode(200);
         return new $response;

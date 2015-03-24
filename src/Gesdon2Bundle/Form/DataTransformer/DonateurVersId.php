@@ -25,53 +25,45 @@ class DonateurVersId implements DataTransformerInterface
     /**
      * Transforme un objet Donateur en entier Id.
      *
-     * @param  array|null $donateurs
-     * @return array
+     * @param  Donateur|null $donateur
+     * @return int|null
      */
-    public function transform($donateurs)
+    public function transform($donateur)
     {
-        if (null === $donateurs) {
-            return array();
+        if (null === $donateur) {
+            return null;
         }
 
-        $ids = array();
-        for ($i = 0; $i < count($donateurs); $i++)
-        {
-            $ids[$i] = $donateurs[$i]->getId();
-        }
-        return $ids;
+        return $donateur->getId();
     }
 
     /**
      * Transforme un entier Id en objet Donateur.
      *
-     * @param  string $strIds
+     * @param  int $id
      *
      * @return array
      *
      * @throws TransformationFailedException si l'objet Donateur n'est pas trouvé.
      */
-    public function reverseTransform($strIds)
+    public function reverseTransform($id)
     {
-        if (null === $strIds) {
-            return array();
+        if (!$id) {
+            return null;
         }
 
-        $ids = explode(',',$strIds);
-
-        $donateurs = $this->om
+        $adresse = $this->om
             ->getRepository('Gesdon2Bundle:Donateur')
-            ->findBy(array('id' => $ids))
+            ->findOneBy(array('id' => $id))
         ;
 
-
-        if (null === $donateurs) {
+        if (null === $adresse) {
             throw new TransformationFailedException(sprintf(
-                'Aucun donateur n\'a été trouvé.',
-                $ids
+                'Le donateur avec l\'ID "%s" n\'existe pas!',
+                $id
             ));
         }
 
-        return $donateurs;
+        return $adresse;
     }
 }

@@ -15,7 +15,7 @@ class AdresseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('donateur', new DonateurType())
+            ->add('donateur', 'donateur_selector')
             ->add('adresse1')
             ->add('adresse2')
             ->add('codePostal')
@@ -40,6 +40,6 @@ class AdresseType extends AbstractType
      */
     public function getName()
     {
-        return 'gesdon2_gesdon2bundle_adresse';
+        return '';
     }
 }

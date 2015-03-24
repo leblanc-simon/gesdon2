@@ -2,12 +2,12 @@
 
 namespace Gesdon2Bundle\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\QueryBuilder;
 
 use Gesdon2Bundle\Entity\Donateur;
 use Gesdon2Bundle\Form\DonateurType;
@@ -76,9 +76,12 @@ class DonateurController extends Controller
      */
     public function tableAction(Request $request)
     {
-        // invoquer le manager Doctrine
-        $em = $this->getDoctrine()->getManager();
+        // invoquer Doctrine
+        $dt = $this->getDoctrine();
+        // invoquer le manager
+        $em = $dt->getManager();
         // créer un constructeur de requêtes DQL
+        /** @var QueryBuilder $qb */
         $qb = $em->createQueryBuilder();
         // sélectionner dans la table Donateur
         $qb ->select('d')
@@ -96,38 +99,39 @@ class DonateurController extends Controller
             // pour debug
             // dump($filter);
             if (!empty($filter)) {
+                dump($filter);
                 // créer une expression AND
                 $andX = $qb->expr()->andX();
-                // pour chaque champ du filtre et sa valeur
-                foreach ($filter as $column => $value) {
-                    // si le champ est une ArrayCollection
-                    // (dans le cas d'un champ 'entity')
-                    if ($value instanceof ArrayCollection) {
-                        // si la collection n'est pas vide...
-                        if ($value->count() != 0) {
-                                // ajouter une clause IN
-                                // où la valeur de la colonne est dans le tableau d'IDs
-                                $andX->add("d.{$column} IN(:ids)");
-                                // affecter la liste d'IDs du tableau au paramètre
-                                $qb->setParameter('ids', $value->getValues());
-                            }
-                    }
-                    // sinon
-                    else {
-                        // si le champ n'est pas vide
-                        if ($value != '') {
-                            // ajouter une clause LIKE, traiter comme du texte
-                            $andX->add($qb->expr()->like(
-                                "d.{$column}",
-                                "'{$value}'"));
-                        }
-                    }
+
+                // le champ type est normalement récupéré sous forme d'un ArrayCollection
+                // FIXME seul l'élément sélectionné avec l'indice le plus haut est pris en compte!
+                if ($filter['type']->count() != 0)
+                {
+                    $andX->add('d.type IN (?1)');
+                    $qb->setParameter(1,$filter['type']->getValues());
                 }
+                if (!empty($filter['nom']))
+                {
+                    $andX->add($qb->expr()->like('d.nom'    , '?2'));
+                    $qb->setParameter(2,$filter['nom']);
+                }
+                if (!empty($filter['prenom']))
+                {
+                    $andX->add($qb->expr()->like('d.prenom'    , '?3'));
+                    $qb->setParameter(3,$filter['prenom']);
+                }
+                if (!empty($filter['courriel']))
+                {
+                    $andX->add($qb->expr()->like('d.courriel'  , '?4'));
+                    $qb->setParameter(4,$filter['courriel']);
+                }
+
                 // si des champs du filtre ont été renseignés, définir la clause where
                 $andParts = $andX->getParts();
                 if (!empty($andParts)) {
                     $qb->where($andX);
                 }
+
             }
         }
         // exécuter la requête et retrouver le résultat

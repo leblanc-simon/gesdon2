@@ -36,9 +36,9 @@
                 <td class="transaction">{{ instance.transacNum }}</td>
                 <td class="courriel">{{ instance.courriel }}</td>
             {# afficher les liens vers le formulaire de modification dans la dernière colonne #}
-            <td>
-                <a href="{{ path('don_edit', { 'id': instance.id }) }}">Modifier</a>
-            </td>
+                <td>
+                    <a href="{{ path('don_edit', { 'id': instance.id }) }}">Modifier</a>
+                </td>
             </tr>
         {% endfor %}
     </table>

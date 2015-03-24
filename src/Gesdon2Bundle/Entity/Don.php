@@ -117,7 +117,7 @@ class Don
     /**
      * Set adresse
      *
-     * @param integer $adresse
+     * @param Adresse $adresse
      * @return Adresse
      */
     public function setAdresse($adresse)

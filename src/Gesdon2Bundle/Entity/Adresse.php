@@ -102,7 +102,7 @@ class Adresse
     /**
      * Set donateur
      *
-     * @param integer $donateur
+     * @param Donateur $donateur
      * @return Adresse
      */
     public function setDonateur($donateur)

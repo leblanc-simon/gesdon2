@@ -42,34 +42,48 @@
                 $('#adresse_search').removeAttr('disabled');
 
                 /**
-                 * Sur click du champ Donateur,
-                 * ouvrir une fenêtre modale contenant la liste des donateurs
+                 * Ajouter un bouton à la suite du champ Donateur.
+                 * Sur click du bouton,
+                 * ouvrir une fenêtre modale contenant la liste des donateurs.
                  */
                 var donateur_dialog;
+                // variable où affecter l'ID du donateur
                 var donateur_id;
-                $("#donateur").on( "click", function(){
+                var bouton_donateur =
+                    // créer le bouton de recherche du donateur
+                    $('<input type="button" action="" value="&#x1F50E;">')
+                    // ajouter l'action sur click
+                    .on( "click", function(){
                     // si la fenêtre n'a pas été initialisée...
                     if (typeof donateur_dialog === "undefined") {
                         // créer une fenêtre à partir d'une nouvelle div
                         donateur_dialog = $("<div title='Choisissez un donateur'></div>")
-                                .load('{{ path('donateur_search') }}')
-                                .dialog({
-                                    autoOpen: false,
-                                    height: 800,
-                                    width: 800,
-                                    modal: true
-                                });
+                            // charger la page de recherche des donateurs
+                            .load('{{ path('donateur_search') }}')
+                            .dialog({
+                                autoOpen: false,
+                                height: 800,
+                                width: 800,
+                                modal: true
+                            });
                         donateur_dialog
-                                .dialog("open")
-                                .on('click', 'tr.donateur', function () {
-                                    donateur_id = $(this).find(".id").text();
-                                    donateur_dialog.dialog("close");
-                                    $("#donateur").val(donateur_id);
-                                });
+                            // ouvrir la fenêtre
+                            .dialog("open")
+                            // sur click d'une ligne du tableau
+                            .on('click', 'tr.donateur', function () {
+                                // affecter la valeur de la cellule 'id' à la variable
+                                donateur_id = $(this).find(".id").text();
+                                // fermer la fenêtre (ne détruit pas l'objet)
+                                donateur_dialog.dialog("close");
+                                // affecter l'id au champ donateur
+                                $("#donateur").val(donateur_id);
+                            });
                     }
                     // si la fenêtre existe déjà, l'ouvrir
                     else donateur_dialog.dialog( "open" );
                 });
+                // ajouter le bouton à la suite du champ Donateur
+                $("#donateur").parent().append(bouton_donateur);
             });
         </script>
     {% endblock %}
@@ -84,6 +98,8 @@
 {% endblock %}
 
 {% block body %}
+    {{ parent() }}
+    <h1>Rechercher une adresse</h1>
     {{ form_start(adresse_form) }}
     {{ form_errors(adresse_form) }}
     {{ form(adresse_form) }}

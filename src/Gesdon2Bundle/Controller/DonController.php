@@ -103,6 +103,7 @@ class DonController extends Controller
                 foreach ($filter as $column => $value) {
                     // si le champ est un tableau
                     // (donc, dans le cas du formulaire, un tableau d'objets entité)
+                    // FIXME seul l'élément sélectionné avec l'indice le plus haut est pris en compte!
                     if ($value instanceof ArrayCollection) {
                         // si la collection n'est pas vide...
                         if ($value->count() != 0) {

@@ -49,29 +49,36 @@
                  */
                 var adresse_id;
                 var adresse_dialog;
-                $("#adresse").on( "click", function(){
-                    // si la fenêtre n'a pas été initialisée...
-                    if (typeof adresse_dialog === "undefined") {
-                        // créer une fenêtre à partir d'une nouvelle div
-                        adresse_dialog = $("<div title='Choisissez une adresse'></div>")
-                                .load('{{ path('adresse_search') }}')
-                                .dialog({
-                                    autoOpen: false,
-                                    height: 800,
-                                    width: 800,
-                                    modal: true
-                                });
-                        adresse_dialog
-                                .dialog("open")
-                                .on('click', 'tr.adresse', function () {
-                                    adresse_id = $(this).find(".id").text();
-                                    adresse_dialog.dialog("close");
-                                    $("#adresse").val(adresse_id);
-                                });
-                    }
-                    // si la fenêtre existe déjà, l'ouvrir
-                    else adresse_dialog.dialog( "open" );
-                });
+                var bouton_adresse =
+                    // créer le bouton de recherche de l'adresse
+                    $('<input type="button" action="" value="&#x1F50E;">')
+                    // ajouter l'action sur click
+                    .on( "click", function(){
+                        // si la fenêtre n'a pas été initialisée...
+                        if (typeof adresse_dialog === "undefined") {
+                            // créer une fenêtre à partir d'une nouvelle div
+                            adresse_dialog =
+                                    $("<div title='Choisissez une adresse'></div>")
+                                    .load('{{ path('adresse_search') }}')
+                                    .dialog({
+                                        autoOpen: false,
+                                        height: 800,
+                                        width: 800,
+                                        modal: true
+                                    });
+                            adresse_dialog
+                                    .dialog("open")
+                                    .on('click', 'tr.adresse', function () {
+                                        adresse_id = $(this).find(".id").text();
+                                        adresse_dialog.dialog("close");
+                                        $("#adresse").val(adresse_id);
+                                    });
+                        }
+                        // si la fenêtre existe déjà, l'ouvrir
+                        else adresse_dialog.dialog( "open" );
+                    });
+                // ajouter le bouton à la suite du champ Adresse
+                $("#adresse").parent().append(bouton_adresse);
             });
         </script>
 
@@ -87,7 +94,8 @@
 {% endblock %}
 
 {% block body %}
-
+    {{ parent() }}
+    <h1>Rechercher un don</h1>
     {{ form_start(don_form) }}
     {{ form_errors(don_form) }}
     {{ form(don_form) }}

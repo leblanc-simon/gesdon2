@@ -15,6 +15,12 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% block body %}
+            <div>
+                <a href="{{ path('donateur_search') }}">Donateurs</a>
+                <a href="{{ path('adresse_search') }}">Adresses</a>
+                <a href="{{ path('don_search') }}">Dons</a>
+            </div>
+        {% endblock %}
     </body>
 </html>

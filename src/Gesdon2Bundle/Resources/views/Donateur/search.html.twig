@@ -55,6 +55,8 @@
 {% endblock %}
 
 {% block body %}
+    {{ parent() }}
+    <h1>Rechercher un donateur</h1>
     {{ form_start(donateur_form) }}
     {{ form_errors(donateur_form) }}
     {{ form(donateur_form) }}
