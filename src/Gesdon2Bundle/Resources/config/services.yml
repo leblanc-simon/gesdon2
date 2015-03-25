@@ -31,3 +31,16 @@ services:
         class: Gesdon2Bundle\Form\DateRangeType
         tags:
             - { name: form.type, alias: date_range }
+
+
+    gesdon2.repository.don:
+        class: Gesdon2Bundle\Repository\DonRepository
+        public: false
+        factory_service: doctrine
+        factory_method: getRepository
+        arguments: [ Gesdon2Bundle:Don ]
+
+    gesdon2.search.don:
+        class: Gesdon2Bundle\Search\Don
+        public: true
+        arguments: ["@gesdon2.repository.don"]

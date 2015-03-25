@@ -73,71 +73,19 @@ class DonController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tableAction(Request $request){
-        // invoquer le manager Doctrine
-        $em = $this->getDoctrine()->getManager();
-        // créer un constructeur de requêtes DQL
-        $qb = $em->createQueryBuilder();
-        // sélectionner dans la table Adresse
-        $qb ->select('d')
-            ->from('Gesdon2Bundle:Don', 'd');
-
-
-        // retrouver les données du formulaire
+    public function tableAction(Request $request)
+    {
+       // retrouver les données du formulaire
         $form = $this->createForm(new DonSearchType());
         $form->submit($request);
 
+        $instances = new ArrayCollection();
+
         // si le formulaire est validé...
         if ($form->isValid()){
-            // retrouver les données
-            $filter = $form->getData();
-            // si le filtre n'est pas vide (au moins un champ du formulaire est renseigné)
-            if (!empty($filter)) {
-                // créer une expression AND
-                $andX = $qb->expr()->andX();
-                // pour chaque champ du filtre et sa valeur
-                // TODO gérer les dates (trouver un moyen de filtrer sur un intervalle)
-                foreach ($filter as $column => $value) {
-                    // si le champ est un tableau
-                    // (donc, dans le cas du formulaire, un tableau d'objets entité)
-                    if ($value instanceof ArrayCollection) {
-                        // si la collection n'est pas vide...
-                        if ($value->count() != 0) {
-                            // ajouter une clause IN
-                            // où la valeur de la colonne est dans le tableau d'IDs
-                            $andX->add("d.{$column} IN(:ids)");
-                            // affecter la liste d'IDs du tableau au paramètre
-                            $qb->setParameter('ids', $value->getValues());
-                        }
-                    }
-                    // si le champ est une Adresse
-                    elseif($value instanceof Adresse){
-                        // ajouter une clause IN
-                        // où la valeur de la colonne est dans le tableau d'IDs
-                        $andX->add("d.{$column} =(:adresseId)");
-                        // affecter la liste d'IDs du tableau au paramètre
-                        $qb->setParameter('adresseId', $value->getId());
-                    }
-                    // sinon
-                    else {
-                        // si le champ n'est pas vide
-                        if ($value != '') {
-                            // ajouter une clause LIKE, traiter comme du texte
-                            $andX->add($qb->expr()->like(
-                                "d.{$column}",
-                                "'{$value}'"));
-                        }
-                    }
-                }
-                // si des champs du filtre ont été renseignés, définir la clause where
-                $andParts = $andX->getParts();
-                if (!empty($andParts)) {
-                    $qb->where($andX);
-                }
-            }
+            $search = $this->container->get('gesdon2.search.don')->setForm($form);
+            $instances = $search->getItems();
         }
-        // exécuter la requête et retrouver le résultat
-        $instances = $qb->getQuery()->getResult();
 
         // générer la page à retourner à partir du template twig "table"
         // en passant la liste des donateurs
