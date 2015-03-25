@@ -10,16 +10,11 @@
 
         <script type="text/javascript" >
             function donPost( $form, callback ){
-                // Retrouver les valeurs du formulaire
-                var values = {};
-                $.each( $form.serializeArray(), function(i, field) {
-                    values[field.name] = field.value;
-                });
                 // Envoyer les valeurs au contrôleur
                 $.ajax({
                     type        : $form.attr( 'method' ),
                     url         : $form.attr( 'action' ),
-                    data        : values,
+                    data        : $form.serialize(),
                     success     : function(data) {
                         callback( data );
                         //vider la div et mettre à jour la div avec les données reçues
